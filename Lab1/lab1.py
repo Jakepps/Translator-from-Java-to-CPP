@@ -1,6 +1,6 @@
 import json
 from tkinter import *
-from tkinter import ttk
+import tkinter.scrolledtext as st
 
 SERVICE_WORDS = ['abstract', 'case', 'continue', 'extends', 'goto', 'int', 'package', 'short', \
                  'try', 'assert', 'catch', 'default', 'final', 'if', 'private', \
@@ -10,7 +10,7 @@ SERVICE_WORDS = ['abstract', 'case', 'continue', 'extends', 'goto', 'int', 'pack
                  'new','return','switch','transient','print','println','main','System',\
                  'out','String','args']
 
-OPERATIONS = ['*','+','-','%', '/','++','=*','=+','=-','=%','=/','==', '<', '<=', '!=', '=', '>', '>=','&','|']
+OPERATIONS = ['*','+','-','%', '/','++','*=','+=','-=','%=','/=','==', '<', '<=', '!=', '=', '>', '>=','&','|']
 
 SEPARATORS = ['\t', '\n', ' ', '(', ')', ',', '.', ':', ';', '[', ']','{','}']
 
@@ -34,16 +34,17 @@ def get_separator(input_sequence, i):
         return buffer
     return ''
 
-tokens = {'W': {}, 'I': {}, 'O': {}, 'R': {}, 'N': {}, 'C': {}}
-
-for service_word in SERVICE_WORDS:
-    check(tokens, 'W', service_word)
-for operation in OPERATIONS:
-    check(tokens, 'O', operation)
-for separator in SEPARATORS:
-    check(tokens, 'R', separator)
 
 def prog():
+    tokens = {'W': {}, 'I': {}, 'O': {}, 'R': {}, 'N': {}, 'C': {}}
+
+    for service_word in SERVICE_WORDS:
+        check(tokens, 'W', service_word)
+    for operation in OPERATIONS:
+        check(tokens, 'O', operation)
+    for separator in SEPARATORS:
+        check(tokens, 'R', separator)
+
     f = open('java.txt', 'r')
     input_sequence = f.read()
     f.close()
@@ -257,12 +258,10 @@ def prog():
         i += 1
 
     f2 = open('tokens.txt', 'w')
-    new_output_sequence = output_sequence.replace('R1 ','\t')
-    f2.write(new_output_sequence)
+    output_sequence = output_sequence.replace('R1 ','\t')
+    f2.write(output_sequence)
     f2.close()
 
-
-def tokenizzz():
     for token_class in tokens.keys():
         with open('%s.json' % token_class, 'w') as write_file:
             data = {val: key for key, val in tokens[token_class].items()}
@@ -274,15 +273,71 @@ def write_txt(data):
 
 def clicked():
     write_txt(codetxt.get("1.0","end"))
+
     tokenstext.delete("1.0",END)
+    Wtext.delete("1.0",END)
+    Rtext.delete("1.0",END)
+    Otext.delete("1.0",END)
+    Ntext.delete("1.0",END)
+    Itext.delete("1.0",END)
+    Ctext.delete("1.0",END)
 
     prog()
-    tokenizzz()
+
+    fw=open('W.json','r')
+    textw=fw.read()
+    textw=textw.replace("    ","")
+    textw=textw.replace('"',"")
+    textw=textw.replace(',',"")
+    textw=textw[2:-1]
+    Wtext.insert("1.0",textw)
+    fw.close()
+
+    fr=open('R.json','r')
+    textr=fr.read()
+    textr=textr.replace("    ","")
+    textr=textr.replace('"',"")
+    textr=textr.replace(',',"")
+    textr=textr[2:-1]
+    Rtext.insert("1.0",textr)
+    fr.close()
+
+    fo=open('O.json','r')
+    texto=fo.read()
+    texto=texto.replace("    ","")
+    texto=texto.replace('"',"")
+    texto=texto.replace(',',"")
+    texto=texto[2:-1]
+    Otext.insert("1.0",texto)
+    fo.close()
     
-    # f3=open('java.txt','r')
-    # beginLabel=Label(window,text=f3.read(),font=("Arial",13))
-    # beginLabel.place(x=40,y=300)
-    # f3.close()
+    fn=open('N.json','r')
+    textn=fn.read()
+    textn=textn.replace("    ","")
+    textn=textn.replace('"',"")
+    textn=textn.replace(',',"")
+    textn=textn[2:-1]
+    Ntext.insert("1.0",textn)
+    fn.close()
+
+    fi=open('I.json','r')
+    texti=fi.read()
+    texti=texti.replace("    ","")
+    texti=texti.replace('"',"")
+    texti=texti.replace(',',"")
+    texti=texti[2:-1]
+    Itext.insert("1.0",texti)
+    fi.close()
+
+    fc=open('C.json','r')
+    textc=fc.read()
+    textc=textc.replace("    ","")
+    textc=textc.replace('"',"")
+    textc=textc.replace(',',"")
+    textc=textc.replace("\\","")
+    textc=textc[2:-1]
+    Ctext.insert("1.0",textc)
+    fc.close()
 
     f4=open('tokens.txt','r')
     text=f4.read()
@@ -292,25 +347,43 @@ def clicked():
 window=Tk()
 window.title("LR1")
 
-window.geometry('1500x700')
+window.geometry('1600x700')
 
-codetxt=Text(window)
+codetxt=st.ScrolledText(window)
 codetxt.place(x=40,y=0,width=410,height=250)
 
-ys = ttk.Scrollbar(orient = "vertical", command = codetxt.yview)
-ys.grid(column = 1, row = 0, sticky = NS)
-xs = ttk.Scrollbar(orient = "horizontal", command = codetxt.xview)
-xs.grid(column = 0, row = 1, sticky = EW)
- 
-codetxt["yscrollcommand"] = ys.set
-codetxt["xscrollcommand"] = xs.set
+tokenstext=st.ScrolledText(window)
+tokenstext.place(x=600,y=0,width=470,height=250)
 
-tokenstext=Text(window)
-tokenstext.place(x=600,y=0,width=410,height=250)
-scroll = Scrollbar(command=tokenstext.yview)
-scroll.pack(side=LEFT, fill=Y)
-tokenstext.config(yscrollcommand=scroll.set)
+Wlb=Label(text="W:",font=("Arial", 12))
+Wlb.place(x=39,y=280)
+Wtext=st.ScrolledText(window)
+Wtext.place(x=40,y=300,width=200,height=200)
 
+Rlb=Label(text="R:",font=("Arial", 12))
+Rlb.place(x=299,y=280)
+Rtext=st.ScrolledText(window)
+Rtext.place(x=300,y=300,width=200,height=200)
+
+Olb=Label(text="O:",font=("Arial", 12))
+Olb.place(x=559,y=280)
+Otext=st.ScrolledText(window)
+Otext.place(x=560,y=300,width=200,height=200)
+
+Nlb=Label(text="N:",font=("Arial", 12))
+Nlb.place(x=819,y=280)
+Ntext=st.ScrolledText(window)
+Ntext.place(x=820,y=300,width=200,height=200)
+
+Ilb=Label(text="I:",font=("Arial", 12))
+Ilb.place(x=1079,y=280)
+Itext=st.ScrolledText(window)
+Itext.place(x=1080,y=300,width=200,height=200)
+
+Clb=Label(text="C:",font=("Arial", 12))
+Clb.place(x=1339,y=280)
+Ctext=st.ScrolledText(window)
+Ctext.place(x=1340,y=300,width=200,height=200)
 
 btngo=Button(window,text="Выполнить",command=clicked)
 btngo.place(x=470,y=0,width=100,height=50)
