@@ -1,6 +1,7 @@
 import json
 from tkinter import *
 import tkinter.scrolledtext as st
+import re
 
 SERVICE_WORDS = ['abstract', 'case', 'continue', 'extends', 'goto', 'int', 'package', 'short', \
                  'try', 'assert', 'catch', 'default', 'final', 'if', 'private', \
@@ -292,12 +293,14 @@ def clicked():
     textw=textw[2:-1]
     Wtext.insert("1.0",textw)
     fw.close()
-
+    
     fr=open('R.json','r')
     textr=fr.read()
     textr=textr.replace("    ","")
     textr=textr.replace('"',"")
-    textr=textr.replace(',',"")
+    regex = r'(?<!,),(?!,)'
+    #textr=textr.replace(',',"")
+    textr=re.sub(regex,'',textr)
     textr=textr[2:-1]
     Rtext.insert("1.0",textr)
     fr.close()
@@ -355,37 +358,37 @@ codetxt.place(x=40,y=0,width=410,height=250)
 tokenstext=st.ScrolledText(window)
 tokenstext.place(x=600,y=0,width=470,height=250)
 
-Wlb=Label(text="W:",font=("Arial", 12))
-Wlb.place(x=39,y=280)
+Wlb=Label(text="Лексемы служебных слов:",font=("Arial", 12))
+Wlb.place(x=35,y=280)
 Wtext=st.ScrolledText(window)
-Wtext.place(x=40,y=300,width=200,height=200)
+Wtext.place(x=40,y=300,width=210,height=200)
 
-Rlb=Label(text="R:",font=("Arial", 12))
-Rlb.place(x=299,y=280)
+Rlb=Label(text="Лексемы разделителей:",font=("Arial", 12))
+Rlb.place(x=295,y=280)
 Rtext=st.ScrolledText(window)
-Rtext.place(x=300,y=300,width=200,height=200)
+Rtext.place(x=300,y=300,width=210,height=200)
 
-Olb=Label(text="O:",font=("Arial", 12))
-Olb.place(x=559,y=280)
+Olb=Label(text="Лексемы операций:",font=("Arial", 12))
+Olb.place(x=555,y=280)
 Otext=st.ScrolledText(window)
 Otext.place(x=560,y=300,width=200,height=200)
 
-Nlb=Label(text="N:",font=("Arial", 12))
-Nlb.place(x=819,y=280)
+Nlb=Label(text="Лексемы числовых констант:",font=("Arial", 12))
+Nlb.place(x=815,y=280)
 Ntext=st.ScrolledText(window)
-Ntext.place(x=820,y=300,width=200,height=200)
+Ntext.place(x=820,y=300,width=210,height=200)
 
-Ilb=Label(text="I:",font=("Arial", 12))
-Ilb.place(x=1079,y=280)
+Ilb=Label(text="Лексемы идентификаторов:",font=("Arial", 12))
+Ilb.place(x=1075,y=280)
 Itext=st.ScrolledText(window)
-Itext.place(x=1080,y=300,width=200,height=200)
+Itext.place(x=1080,y=300,width=210,height=200)
 
-Clb=Label(text="C:",font=("Arial", 12))
-Clb.place(x=1339,y=280)
+Clb=Label(text="Лексемы символьных констант:",font=("Arial", 12))
+Clb.place(x=1335,y=280)
 Ctext=st.ScrolledText(window)
-Ctext.place(x=1340,y=300,width=200,height=200)
+Ctext.place(x=1340,y=300,width=210,height=200)
 
-btngo=Button(window,text="Выполнить",command=clicked)
-btngo.place(x=470,y=0,width=100,height=50)
+btngo=Button(window,text="---->",command=clicked,font=("Arial", 20))
+btngo.place(x=470,y=90,width=100,height=50)
 
 window.mainloop()
