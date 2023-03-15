@@ -299,7 +299,6 @@ def clicked():
     textr=textr.replace("    ","")
     textr=textr.replace('"',"")
     regex = r'(?<!,),(?!,)'
-    #textr=textr.replace(',',"")
     textr=re.sub(regex,'',textr)
     textr=textr[2:-1]
     Rtext.insert("1.0",textr)
