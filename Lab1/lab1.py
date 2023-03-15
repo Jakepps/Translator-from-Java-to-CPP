@@ -388,7 +388,7 @@ Clb.place(x=1335,y=280)
 Ctext=st.ScrolledText(window)
 Ctext.place(x=1340,y=300,width=210,height=200)
 
-btngo=Button(window,text="---->",command=clicked,font=("Arial", 20))
-btngo.place(x=470,y=90,width=100,height=50)
+btngo=Button(window,text="Выполнить \n преобразование",command=clicked,font=("Arial", 10))
+btngo.place(x=470,y=90,width=110,height=50)
 
 window.mainloop()
