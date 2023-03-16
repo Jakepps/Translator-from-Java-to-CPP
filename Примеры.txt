@@ -1,21 +1,14 @@
 public static void main(String[] args)
 {
-	int b=123;
-	while (b<1000)
-	{
-		b+=1;
-		System.out.println(b);
-	}
-}
-
-
-public static void main(String[] args)
-{
 	int a;
+	int b;
 	a = 5;
+	b = 10;
+	a = b + 1;
+	b = a;
 	for(int i = 0; i < 100; i++)
 	{
-		System.out.println(a*2);
+		System.out.println(a + b);
 	}
 	System.out.println("Hello world");
 	System.out.println("fdf");
@@ -23,20 +16,7 @@ public static void main(String[] args)
 
 public static void main(String[] args)
 {
-	int a;
-	int b;
-	a = 5;
-	b = 5;
-	for(int i = 0; i < 100; i++)
-	{
-		System.out.println(a + b);
-	}
-	System.out.println("Hello world");
-}
-
-public static void main(String[] args)
-{
-
+/*it's java*/
 	for(int i = 0; i < 100; i++)
 	{
 		System.out.println(i);
