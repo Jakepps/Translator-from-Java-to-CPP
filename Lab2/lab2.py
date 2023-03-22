@@ -5,14 +5,12 @@ import re
 CLASSES_OF_TOKENS = ['W', 'I', 'O', 'R', 'N', 'C']
 
 def is_identifier(token):
-    return re.match(r'^I\d+$', inverse_tokens[token]) or \
-           token in ['abs', 'cos', 'exp', 'ln', 'read', 'readln', 'sin', 'sqrt', \
-                     'write', 'writeln']
+    return re.match(r'^I\d+$', inverse_tokens[token])
 
 def get_priority(token):
-    if token in ['(', 'for', 'if', 'while', '[', 'АЭМ', 'Ф', 'begin','{']:
+    if token in ['(', 'for', 'if', 'while', '[', 'АЭМ', 'Ф', '{']:
         return 0
-    if token in [')', ',', ';', 'do', 'else',']']:
+    if token in [')', ',', ';', 'do', 'else', ']']:
         return 1
     if token == '=':
         return 2
@@ -28,69 +26,69 @@ def get_priority(token):
         return 7
     if token in ['*', '/', '%']:
         return 8
-    if token in ['}', 'public', 'void', 'procedure','int', 'double', 'boolean', 'String', 'float', 'args']:
+    if token in ['}', 'public', 'void', 'procedure','int', 'double', 'boolean', 'String', 'float', 'args','return','System','out','println','.']:
         return 9
     return -1
 
-def description_var(block, out_seq):
-    i = 0
-    var_count = 0
-    while i < len(block):
-        while i < len(block) and block[i] != ';':
-            if not(block[i] in ['\n', ',',  '[', ']']):
-                out_seq += block[i] + ' '
-                var_count += 1
-            i += 1
-        if i == len(block):
-            break
-        i += 1
-        if block[i-1:i+5] == 'array[':
-            j = i+5
-            while block[j] != ']':
-                if block[j] == ',':
-                    out_seq += '.. '
-                else:
-                    out_seq += block[j] + ' '
-                j += 1
-            out_seq += '.. ' + str(j-i-4) + ' АЭМ '
-            i = j+1
-        elif block[i-1:i+4] == 'int[]':
-            out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-            var_count = 0
-            i += 4
-        elif block[i-1:i+5] == 'char[]':
-            out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-            var_count = 0
-            i += 5
-        elif block[i-1:i+6] == 'float[]':
-            out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-            var_count = 0
-            i += 6
-        elif block[i-1:i+7] == 'double[]':
-            out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-            var_count = 0
-            i += 7
-        elif block[i-1:i+6] == 'byte[]':
-            out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-            var_count = 0
-            i += 6
-        elif block[i-1:i+7] == 'short[]':
-            out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-            var_count = 0
-            i += 7
-        elif block[i-1:i+6] == 'long[]':
-            out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-            var_count = 0
-            i += 6
-        elif block[i-1:i+6] == 'bool[]':
-            out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-            var_count = 0
-            i += 6
-        else:
-            out_seq += str(var_count) + ' ' + block[i] + ' '
-            var_count = 0
-            i += 1
-    return out_seq
+# def description_var(block, out_seq):
+#     i = 0
+#     var_count = 0
+#     while i < len(block):
+#         while i < len(block) and block[i] != ';':
+#             if not(block[i] in ['\n', ',',  '[', ']']):
+#                 out_seq += block[i] + ' '
+#                 var_count += 1
+#             i += 1
+#         if i == len(block):
+#             break
+#         i += 1
+#         if block[i-1:i+5] == 'array[':
+#             j = i+5
+#             while block[j] != ']':
+#                 if block[j] == ',':
+#                     out_seq += '.. '
+#                 else:
+#                     out_seq += block[j] + ' '
+#                 j += 1
+#             out_seq += '.. ' + str(j-i-4) + ' АЭМ '
+#             i = j+1
+#         elif block[i-1:i+4] == 'int[]':
+#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
+#             var_count = 0
+#             i += 4
+#         elif block[i-1:i+5] == 'char[]':
+#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
+#             var_count = 0
+#             i += 5
+#         elif block[i-1:i+6] == 'float[]':
+#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
+#             var_count = 0
+#             i += 6
+#         elif block[i-1:i+7] == 'double[]':
+#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
+#             var_count = 0
+#             i += 7
+#         elif block[i-1:i+6] == 'byte[]':
+#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
+#             var_count = 0
+#             i += 6
+#         elif block[i-1:i+7] == 'short[]':
+#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
+#             var_count = 0
+#             i += 7
+#         elif block[i-1:i+6] == 'long[]':
+#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
+#             var_count = 0
+#             i += 6
+#         elif block[i-1:i+6] == 'bool[]':
+#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
+#             var_count = 0
+#             i += 6
+#         else:
+#             out_seq += str(var_count) + ' ' + block[i] + ' '
+#             var_count = 0
+#             i += 1
+#     return out_seq
 
 # лексемы (код-значение)
 tokens = {}
@@ -117,27 +115,15 @@ t = [tokens[i] for i in match]
 i = 0
 stack = []
 out_seq = ''
-aem_count = proc_level = 1
-func_count = tag_count = proc_num = if_count = while_count = repeat_count = \
-             for_count = begin_count = end_count = 0
-is_func = False
+aem_count = proc_num = proc_level = operand_count = 1
+func_count = tag_count = proc_num = if_count = while_count = \
+             begin_count = end_count = bracket_count = 0
+is_if = is_while = is_description_var = False
 while i < len(t):
     p = get_priority(t[i])
-    if t[i] == '.':
-        stack.pop()
-        out_seq += 'КП '
-    elif p == -1:
+    if p == -1:
         if t[i] != '\n':
             out_seq += t[i] + ' '
-        if is_func and t[i + 1] == '(':
-            i += 2
-            block = []
-            while t[i] != ')':
-                block.append(t[i])
-                i += 1
-            out_seq = description_var(block, out_seq)
-            i -= 1
-            is_func = False
     else:
         if t[i] == '[':
             aem_count += 1
@@ -149,24 +135,39 @@ while i < len(t):
             aem_count = 1
         elif t[i] == '(':
             if is_identifier(t[i - 1]):
-                func_count += 1
+                if t[i + 1] != ')':
+                    func_count += 1
                 stack.append(str(func_count) + ' Ф')
             else:
                 stack.append(t[i])
+            bracket_count += 1
         elif t[i] == ')':
-            if t[i + 1] == ':':
-                i += 2
-                out_seq += '1 ' + t[i] + ' КО '
-            else:
-                while stack[-1] != '(' and not(re.match(r'^\d+ Ф$', stack[-1])):
-                    out_seq += stack.pop() + ' '
-                if re.match(r'^\d+ Ф$', stack[-1]):
-                    stack.append(str(func_count + 1) + ' Ф')
-                    func_count = 0
+            while stack[-1] != '(' and not(re.match(r'^\d+ Ф$', stack[-1])):
+                out_seq += stack.pop() + ' '
+            if re.match(r'^\d+ Ф$', stack[-1]):
+                stack.append(str(func_count + 1) + ' Ф')
+                func_count = 0
             stack.pop()
+            bracket_count -= 1
+            if bracket_count == 0:
+                if is_if:
+                    while stack[-1] != 'if':
+                        out_seq += stack.pop() + ' '
+                    tag_count += 1
+                    stack[-1] += ' М' + str(tag_count)
+                    out_seq += 'М' + str(tag_count) + ' УПЛ '
+                    is_if = False
+                if is_while:
+                    while not(re.match(r'^while М\d+$', stack[-1])):
+                        out_seq += stack.pop() + ' '
+                    tag_count += 1
+                    out_seq += 'М' + str(tag_count) + ' УПЛ '
+                    stack[-1] += ' М' + str(tag_count)
+                    is_while = False
         elif t[i] == ',':
             while not(re.match(r'^\d+ АЭМ$', stack[-1])) and \
-                  not(re.match(r'^\d+ Ф$', stack[-1])):
+                  not(re.match(r'^\d+ Ф$', stack[-1])) and \
+                  not(re.match(r'^var', stack[-1])):
                 out_seq += stack.pop() + ' '
             if re.match(r'^\d+ АЭМ$', stack[-1]):
                 aem_count += 1
@@ -174,19 +175,16 @@ while i < len(t):
             if re.match(r'^\d+ Ф$', stack[-1]):
                 func_count += 1
                 stack.append(str(func_count) + ' Ф')
-            stack.pop()
+            if re.match(r'^var', stack[-1]):
+                operand_count += 1
         elif t[i] == 'goto':
             out_seq += t[i + 1] + ' БП '
             i += 2
         elif t[i] == 'if':
             stack.append(t[i])
             if_count += 1
-        elif t[i] == 'then':
-            while stack[-1] != 'if':
-                out_seq += stack.pop() + ' '
-            tag_count += 1
-            stack[-1] += ' М' + str(tag_count)
-            out_seq += 'М' + str(tag_count) + ' УПЛ '
+            bracket_count = 0
+            is_if = True
         elif t[i] == 'else':
             while not(re.match(r'^if М\d+$', stack[-1])):
                 out_seq += stack.pop() + ' '
@@ -199,46 +197,97 @@ while i < len(t):
             stack.append(t[i] + ' М' + str(tag_count))
             out_seq += 'М' + str(tag_count) + ' : '
             while_count += 1
-        elif t[i] == 'do':
-            while not(re.match(r'^while М\d+$', stack[-1])) and \
-                  not(re.match(r'^for [a-z][a-z\d]+ М\d+$', stack[-1])):
-                out_seq += stack.pop() + ' '
-            tag_count += 1
-            if re.match(r'^for [a-z][a-z\d]+ М\d+$', stack[-1]):
-                out_seq += '<= '
-            out_seq += 'М' + str(tag_count) + ' УПЛ '
-            stack[-1] += ' М' + str(tag_count)
+            bracket_count = 0
+            is_while = True
         elif t[i] == 'for':
-            stack.append(t[i] + ' ' + t[i + 1])
-            for_count += 1
-        # elif t[i] == 'var':
-        #     block = []
-        #     i += 1
-        #     while not(t[i] in ['begin', 'function', 'procedure']):
-        #         block.append(t[i])
-        #         i += 1
-        #     i -= 1
-        #     out_seq = description_var(block, out_seq)
-        #     out_seq += str(proc_num) + ' ' + str(proc_level) + ' КО '
-        # elif t[i] in ['function', 'procedure', 'program']:
-        #     if t[i] == 'function' or t[i] == 'procedure':
-        #         is_func = True
-        #     proc_num += 1
-        #     stack.append('PROC ' + str(proc_num) + ' ' + str(proc_level))
-        # elif t[i] == 'begin':
-        #     begin_count += 1
-        #     proc_level = begin_count - end_count + 1
-        #     stack.append(t[i])
-        # elif t[i] == 'end':
-        #     end_count += 1
-        #     proc_level = begin_count - end_count + 1
-        #     while stack[-1] != 'begin':
-        #         out_seq += stack.pop() + ' '
-        #     stack.pop()
-        #     if not(if_count > 0 and re.match(r'^if М\d+$', stack[-1])) and \
-        #        not(while_count > 0 and re.match(r'^while М\d+ М\d+$', stack[-1])) and \
-        #        not(for_count > 0 and re.match(r'^for [a-z][a-z\d]+ М\d+ М\d+$', stack[-1])):
-        #         stack.append(t[i])
+            j = i + 2
+            bracket_count = 1
+            a = []
+            while t[j] != ';':
+                a.append(t[j])
+                j += 1
+                if t[j] == '(':
+                    bracket_count += 1
+                elif t[j] == ')':
+                    bracket_count -= 1
+            j += 1
+            b = []
+            while t[j] != ';':
+                b.append(t[j])
+                j += 1
+                if t[j] == '(':
+                    bracket_count += 1
+                elif t[j] == ')':
+                    bracket_count -= 1
+            j += 1
+            c = []
+            while bracket_count != 0:
+                c.append(t[j])
+                j += 1
+                if t[j] == '(':
+                    bracket_count += 1
+                elif t[j] == ')':
+                    bracket_count -= 1
+            j += 1
+            d = []
+            while t[j] != ';' and t[j] != '{':
+                d.append(t[j])
+                j += 1
+            if t[j] == '{':
+                j += 1
+                bracket_count = 1
+                d = ['{']
+                while bracket_count != 0:
+                    d.append(t[j])
+                    j += 1
+                    if t[j] == '{':
+                        bracket_count += 1
+                    elif t[j] == '}':
+                        bracket_count -= 1
+                d.append('}')
+            j += 1
+            t = t[:i] + a + [';', '\n', 'while', '('] + b + [')', '{', '\n'] + d + \
+                ['\n'] + c + [';', '\n', '}'] + t[j:]
+            i -= 1
+        elif t[i] == 'var':
+            stack.append(t[i] + ' ' + str(proc_num) + ' ' + str(proc_level))
+            operand_count = 1
+            is_description_var = True
+        elif t[i] == 'sub':
+            proc_num += 1
+            stack.append('PROC ' + str(proc_num) + ' ' + str(proc_level))
+        elif t[i] == '{':
+            if len(stack) > 0 and re.match(r'^PROC', stack[-1]):
+                num = re.findall(r'\d+', stack[-1])
+                stack.pop()
+                out_seq += '0 Ф ' + str(num[0]) + ' ' + str(num[1]) + ' НП '
+                stack.append('PROC ' + str(proc_num) + ' ' + str(proc_level))
+            begin_count += 1
+            proc_level = begin_count - end_count + 1
+            stack.append(t[i])
+        elif t[i] == '}':
+            end_count += 1
+            proc_level = begin_count - end_count + 1
+            while stack[-1] != '{':
+                out_seq += stack.pop() + ' '
+            stack.pop()
+            if len(stack) > 0 and re.match(r'^PROC', stack[-1]):
+                stack.pop()
+                out_seq += 'КП '
+            if if_count > 0 and re.match(r'^if М\d+$', stack[-1]):
+                tag = re.search('М\d+', stack[-1]).group(0)
+                j = i + 1
+                while j < len(t) and t[j] == '\n':
+                    j += 1
+                if j >= len(t) or t[j] != 'else':
+                    stack.pop()
+                    out_seq += tag + ' : '
+                    if_count -= 1
+            if while_count > 0 and re.match(r'^while М\d+ М\d+$', stack[-1]):
+                tag = re.findall('М\d+', stack[-1])
+                stack.pop()
+                out_seq += tag[0] + ' БП ' + tag[1] + ' : '
+                while_count -= 1
         elif t[i] == ';':
             if len(stack) > 0 and re.match(r'^PROC', stack[-1]):
                 num = re.findall(r'\d+', stack[-1])
@@ -247,30 +296,34 @@ while i < len(t):
             elif len(stack) > 0 and stack[-1] == 'end':
                 stack.pop()
                 out_seq += 'КП '
-            elif if_count > 0 or while_count > 0 or repeat_count > 0 or \
-                 for_count > 0:
-                while not(len(stack) > 0 and stack[-1] == 'begin') and \
+            elif is_description_var:
+                while not(re.match(r'^var', stack[-1])):
+                    out_seq += stack.pop() + ' '
+                proc_num, proc_level = re.findall('\d+', stack[-1])
+                stack.pop()
+                out_seq += str(operand_count) + ' ' + proc_num + ' ' + proc_level + \
+                           ' КО '
+                is_description_var = False
+            elif if_count > 0 or while_count > 0:
+                while not(len(stack) > 0 and stack[-1] == '{') and \
                       not(if_count > 0 and re.match(r'^if М\d+$', stack[-1])) and \
-                      not(while_count > 0 and re.match(r'^while М\d+ М\d+$', stack[-1])) and \
-                      not(for_count > 0 and re.match(r'^for [a-z][a-z\d]+ М\d+ М\d+$', stack[-1])):
+                      not(while_count > 0 and re.match(r'^while М\d+ М\d+$', stack[-1])):
                     out_seq += stack.pop() + ' '
                 if if_count > 0 and re.match(r'^if М\d+$', stack[-1]):
                     tag = re.search('М\d+', stack[-1]).group(0)
+                    j = i + 1
+                    while t[j] == '\n':
+                        j += 1
+                    if t[j] != 'else':
+                        stack.pop()
                     out_seq += tag + ' : '
                     if_count -= 1
                 if while_count > 0 and re.match(r'^while М\d+ М\d+$', stack[-1]):
                     tag = re.findall('М\d+', stack[-1])
                     out_seq += tag[0] + ' БП ' + tag[1] + ' : '
                     while_count -= 1
-                if for_count > 0 and re.match(r'^for [a-z][a-z\d]+ М\d+ М\d+$', stack[-1]):
-                    out_seq += '1 + = '
-                    tag = re.findall('М\d+', stack[-1])
-                    out_seq += tag[0] + ' БП ' + tag[1] + ' : '
-                    for_count -= 1
-                if len(stack) > 0 and stack[-1] != 'begin':
-                    stack.pop()
             else:
-                while len(stack) > 0 and stack[-1] != 'begin':
+                while len(stack) > 0 and stack[-1] != '{':
                     out_seq += stack.pop() + ' '
         else:
             while len(stack) > 0 and get_priority(stack[-1]) >= p:
