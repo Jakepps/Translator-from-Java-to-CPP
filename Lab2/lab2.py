@@ -22,11 +22,11 @@ def get_priority(token):
         return 5
     if token in ['<', '<=', '!=', '=', '>', '>=']:
         return 6
-    if token == '+' or token == '-':
+    if token == '+' or token == '-' or token == '+=' or token == '-=' or token == '*=' or token == '/=':
         return 7
     if token in ['*', '/', '%']:
         return 8
-    if token in ['}', 'public', 'void', 'procedure','int', 'double', 'boolean', 'String', 'float', 'args','return','System','out','println','.']:
+    if token in ['}', 'public','static', 'void', 'procedure','int', 'double', 'boolean', 'String', 'float', 'args','return','System','out','println','.']:
         return 9
     return -1
 
@@ -175,8 +175,6 @@ while i < len(t):
             if re.match(r'^\d+ Ф$', stack[-1]):
                 func_count += 1
                 stack.append(str(func_count) + ' Ф')
-            if re.match(r'^var', stack[-1]):
-                operand_count += 1
         elif t[i] == 'goto':
             out_seq += t[i + 1] + ' БП '
             i += 2
@@ -249,10 +247,6 @@ while i < len(t):
             t = t[:i] + a + [';', '\n', 'while', '('] + b + [')', '{', '\n'] + d + \
                 ['\n'] + c + [';', '\n', '}'] + t[j:]
             i -= 1
-        elif t[i] == 'var':
-            stack.append(t[i] + ' ' + str(proc_num) + ' ' + str(proc_level))
-            operand_count = 1
-            is_description_var = True
         elif t[i] == 'sub':
             proc_num += 1
             stack.append('PROC ' + str(proc_num) + ' ' + str(proc_level))
@@ -297,8 +291,6 @@ while i < len(t):
                 stack.pop()
                 out_seq += 'КП '
             elif is_description_var:
-                while not(re.match(r'^var', stack[-1])):
-                    out_seq += stack.pop() + ' '
                 proc_num, proc_level = re.findall('\d+', stack[-1])
                 stack.pop()
                 out_seq += str(operand_count) + ' ' + proc_num + ' ' + proc_level + \
