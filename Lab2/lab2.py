@@ -26,69 +26,9 @@ def get_priority(token):
         return 7
     if token in ['*', '/', '%']:
         return 8
-    if token in ['}', 'public','static', 'void', 'procedure','int', 'double', 'boolean', 'String', 'float', 'args','return','System','out','println','.']:
+    if token in ['}', 'public','static', 'void', 'procedure','int', 'double', 'boolean', 'String', 'float', 'args','return','System.out.println']:
         return 9
     return -1
-
-# def description_var(block, out_seq):
-#     i = 0
-#     var_count = 0
-#     while i < len(block):
-#         while i < len(block) and block[i] != ';':
-#             if not(block[i] in ['\n', ',',  '[', ']']):
-#                 out_seq += block[i] + ' '
-#                 var_count += 1
-#             i += 1
-#         if i == len(block):
-#             break
-#         i += 1
-#         if block[i-1:i+5] == 'array[':
-#             j = i+5
-#             while block[j] != ']':
-#                 if block[j] == ',':
-#                     out_seq += '.. '
-#                 else:
-#                     out_seq += block[j] + ' '
-#                 j += 1
-#             out_seq += '.. ' + str(j-i-4) + ' АЭМ '
-#             i = j+1
-#         elif block[i-1:i+4] == 'int[]':
-#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-#             var_count = 0
-#             i += 4
-#         elif block[i-1:i+5] == 'char[]':
-#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-#             var_count = 0
-#             i += 5
-#         elif block[i-1:i+6] == 'float[]':
-#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-#             var_count = 0
-#             i += 6
-#         elif block[i-1:i+7] == 'double[]':
-#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-#             var_count = 0
-#             i += 7
-#         elif block[i-1:i+6] == 'byte[]':
-#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-#             var_count = 0
-#             i += 6
-#         elif block[i-1:i+7] == 'short[]':
-#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-#             var_count = 0
-#             i += 7
-#         elif block[i-1:i+6] == 'long[]':
-#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-#             var_count = 0
-#             i += 6
-#         elif block[i-1:i+6] == 'bool[]':
-#             out_seq += str(var_count) + ' ' + 'АЭМ' + ' '
-#             var_count = 0
-#             i += 6
-#         else:
-#             out_seq += str(var_count) + ' ' + block[i] + ' '
-#             var_count = 0
-#             i += 1
-#     return out_seq
 
 # лексемы (код-значение)
 tokens = {}
@@ -122,7 +62,7 @@ is_if = is_while = is_description_var = False
 while i < len(t):
     p = get_priority(t[i])
     if p == -1:
-        if t[i] != '\n':
+        if t[i] != '\n' and t[i] != '\t':
             out_seq += t[i] + ' '
     else:
         if t[i] == '[':
@@ -325,6 +265,9 @@ while i < len(t):
 
 while len(stack) > 0:
     out_seq += stack.pop() + ' '
+
+out_seq = out_seq.replace("System . out . println", "System.out.println")
+out_seq = re.sub(r'(\d) Ф', r'\1Ф', out_seq)
 
 # файл, содержащий обратную польскую запись
 f = open('reverse_polish_entry.txt', 'w')

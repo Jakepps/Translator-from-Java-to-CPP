@@ -1,1 +1,1 @@
-	 b int 0 = 	 Ì1 : b 1000 < Ì2 ÓÏË 	 	 	 b 1 += 	 	 System . out . b println 	 Ì1 ÁÏ Ì2 : 
+public static main 2 ÀİÌ String args b int 0 = Ì1 : b 1000 < Ì2 ÓÏË b 1 += System.out.println b Ì1 ÁÏ Ì2 : b f b 1Ô = void 
