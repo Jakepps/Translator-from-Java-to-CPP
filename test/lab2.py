@@ -22,7 +22,7 @@ def get_priority(token):
         return 5
     if token in ['<', '<=', '!=', '=', '>', '>=']:
         return 6
-    if token == '+' or token == '-' or token == '+=' or token == '-=' or token == '*=' or token == '/=':
+    if token in ['+', '-', '+=', '-=', '*=', '/=']:
         return 7
     if token in ['*', '/', '%']:
         return 8

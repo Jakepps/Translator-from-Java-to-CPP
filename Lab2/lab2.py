@@ -296,7 +296,7 @@ def prog():
             return 5
         if token in ['<', '<=', '!=', '=', '>', '>=']:
             return 6
-        if token == '+' or token == '-' or token == '+=' or token == '-=' or token == '*=' or token == '/=':
+        if token in ['+', '-', '+=', '-=', '*=', '/=']:
             return 7
         if token in ['*', '/', '%']:
             return 8
@@ -389,9 +389,6 @@ def prog():
                 if re.match(r'^\d+ Ф$', stack[-1]):
                     func_count += 1
                     stack.append(str(func_count) + ' Ф')
-            elif t[i] == 'goto':
-                out_seq += t[i + 1] + ' БП '
-                i += 2
             elif t[i] == 'if':
                 stack.append(t[i])
                 if_count += 1

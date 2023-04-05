@@ -13,6 +13,6 @@ public static void main(String[] args)
         a *= 2;
         System.out.println(b);
     }
-    a = f(a,b)
+    a = sum(a,b)
     System.out.println(b);
 }

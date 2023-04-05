@@ -4,7 +4,10 @@ public static void main(String[] args)
     while (b < 1000)
     {
         b += 1;
+    }
+    if (b < 100)
+    {
+        b *= 333;
         System.out.println(b);
     }
-    b = f(b);
 }
