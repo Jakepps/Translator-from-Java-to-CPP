@@ -1,13 +1,11 @@
 import json
 import re
 from tkinter import *
-import tkinter as tk
 import tkinter.scrolledtext as st
 import re
 
-#LAB1
 def prog():
-
+    #LAB1
     SERVICE_WORDS = ['abstract', 'case', 'continue', 'extends', 'goto', 'int', 'package', 'short', 
                     'try', 'assert', 'catch', 'default', 'final', 'if', 'private', 
                     'static', 'this', 'void', 'boolean', 'char', 'do','long', 'protected', 
@@ -275,7 +273,6 @@ def prog():
     f.close()
 
     #LAB2
-
     CLASSES_OF_TOKENS = ['W', 'I', 'O', 'R', 'N', 'C']
 
     def is_identifier(token):
@@ -564,13 +561,13 @@ def clicked():
 window=Tk()
 window.title("LR2")
 
-window.geometry('1300x500')
+window.geometry('1100x500')
 
 codetxt=st.ScrolledText(window)
-codetxt.place(x=40,y=0,width=410,height=250)
+codetxt.place(x=40,y=0,width=410,height=290)
 
 opzstext=st.ScrolledText(window)
-opzstext.place(x=600,y=60,width=500,height=150)
+opzstext.place(x=600,y=80,width=500,height=140)
 
 btngo=Button(window,text="Выполнить \n преобразование",command=clicked,font=("Arial", 10))
 btngo.place(x=470,y=90,width=110,height=50)
