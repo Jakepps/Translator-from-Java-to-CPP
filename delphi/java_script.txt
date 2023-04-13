@@ -1,0 +1,17 @@
+function Example6() {
+    var x, flag, i;
+    x = prompt('x = ');
+    flag = 1;
+    i = 2;
+    while ((i <= (x - 1)) && (flag == 1)) {
+        if ((x % i) == 0) {
+            flag = 0;
+        }
+        i = i + 1;
+    }
+    if (flag == 1) {
+        alert('YES');
+    } else {
+        alert('NO');
+    }
+}

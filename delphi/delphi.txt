@@ -1,0 +1,17 @@
+program Example6;
+var x, flag, i: integer;
+begin
+  write('x = ');
+  readln(x);
+  flag := 1;
+  i := 2;
+  while (i <= x-1) and (flag = 1) do begin
+    if (x mod i = 0) then
+      flag := 0;
+    i := i+1;
+  end;
+  if (flag = 1) then
+    writeln('YES')
+  else
+    writeln('NO');
+end.

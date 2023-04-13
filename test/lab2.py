@@ -57,7 +57,7 @@ stack = []
 out_seq = ''
 aem_count = proc_num = proc_level = operand_count = 1
 func_count = tag_count = proc_num = if_count = while_count = \
-             begin_count = end_count = bracket_count = 0
+            begin_count = end_count = bracket_count = 0
 is_if = is_while = is_description_var = False
 while i < len(t):
     p = get_priority(t[i])
@@ -106,8 +106,8 @@ while i < len(t):
                     is_while = False
         elif t[i] == ',':
             while not(re.match(r'^\d+ АЭМ$', stack[-1])) and \
-                  not(re.match(r'^\d+ Ф$', stack[-1])) and \
-                  not(re.match(r'^var', stack[-1])):
+                not(re.match(r'^\d+ Ф$', stack[-1])) and \
+                not(re.match(r'^var', stack[-1])):
                 out_seq += stack.pop() + ' '
             if re.match(r'^\d+ АЭМ$', stack[-1]):
                 aem_count += 1
@@ -115,9 +115,6 @@ while i < len(t):
             if re.match(r'^\d+ Ф$', stack[-1]):
                 func_count += 1
                 stack.append(str(func_count) + ' Ф')
-        elif t[i] == 'goto':
-            out_seq += t[i + 1] + ' БП '
-            i += 2
         elif t[i] == 'if':
             stack.append(t[i])
             if_count += 1
@@ -234,12 +231,12 @@ while i < len(t):
                 proc_num, proc_level = re.findall('\d+', stack[-1])
                 stack.pop()
                 out_seq += str(operand_count) + ' ' + proc_num + ' ' + proc_level + \
-                           ' КО '
+                        ' КО '
                 is_description_var = False
             elif if_count > 0 or while_count > 0:
                 while not(len(stack) > 0 and stack[-1] == '{') and \
-                      not(if_count > 0 and re.match(r'^if М\d+$', stack[-1])) and \
-                      not(while_count > 0 and re.match(r'^while М\d+ М\d+$', stack[-1])):
+                    not(if_count > 0 and re.match(r'^if М\d+$', stack[-1])) and \
+                    not(while_count > 0 and re.match(r'^while М\d+ М\d+$', stack[-1])):
                     out_seq += stack.pop() + ' '
                 if if_count > 0 and re.match(r'^if М\d+$', stack[-1]):
                     tag = re.search('М\d+', stack[-1]).group(0)
