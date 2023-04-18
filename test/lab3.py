@@ -5,7 +5,7 @@ import re
 CLASSES_OF_TOKENS = ['W', 'I', 'O', 'R', 'N', 'C']
 
 def is_identifier(token):
-    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or token in ['abs', 'cos', 'exp', 'ln', 'read', 'readln', 'sin', 'sqrt', 'write', 'writeln', 'public', 'static', 'void'] or re.match(r'^М\d+$', token)
+    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^М\d+$', token) or token in ['int','double', 'boolean']
 
 def is_constant(token):
     return ((token in inverse_tokens) and re.match(r'^C\d+$', inverse_tokens[token])) or ((token in inverse_tokens) and re.match(r'^N\d+$', inverse_tokens[token])) or token.isdigit()
@@ -33,53 +33,39 @@ replace = {'in.nextInt()': 'scanf', 'in.nextDouble()': 'scanf', 'in.nextLine()':
 # файл, содержащий обратную польскую запись
 f = open('reverse_polish_entry.txt', 'r')
 inp_seq = f.read()
-inp_seq = re.sub(r"'([^']*)'", r'"\1"', inp_seq)
 f.close()
 
-t = re.findall(r'(?:\"[^\"]*\")|(?:[^ ]+)', inp_seq)
+t = re.findall(r'(?:\'[^\']*\')|(?:"[^"]*")|(?:[^ ]+)', inp_seq)
+
 
 i = 0
 stack = []
 out_seq = ''
 is_func = False
-variable = {}
 while i < len(t):
     if is_func == True and not(is_identifier(t[i])):
-        out_seq += '() {\n'
+        out_seq += ' {\n'
         is_func = False
     if is_identifier(t[i]) or is_constant(t[i]):
         stack.append(replace[t[i]] if t[i] in replace else t[i])
     elif t[i] == 'НП':
-        arg1 = int(stack.pop())
         stack.pop()
-        arg2 = stack.pop()
-        if arg1 == 1:
-            out_seq += f'void main'
-        else:
-            out_seq += f'void {arg2}'
+        stack.pop()
+        arg1 = stack.pop()
+        out_seq += f'function {arg1}'
         is_func = True
     elif t[i] == 'КП':
         out_seq += '}'
-    elif t[i] in ['integer', 'double', 'string']:
-        k = int(stack.pop())
-        a = []
-        while k != 0:
-            a.append(stack.pop())
-            k -= 1
-        a.reverse()
-        out_seq += replace[t[i]] + ' ' + ', '.join(a) + ';\n'
-        for j in a:
-            variable[j] = replace[t[i]]
     elif t[i] == 'КО':
         stack.pop()
         stack.pop()
     elif t[i] == 'УПЛ':
         arg1 = stack.pop()
         arg2 = stack.pop()
-        out_seq += f'if (!({arg2})) {arg1};\n'
+        out_seq += f'if (!({arg2})) {arg1}\n'
     elif t[i] == 'БП':
         arg1 = stack.pop()
-        out_seq += f'goto {arg1};\n'
+        out_seq += f'goto {arg1}\n'
     elif t[i] == ':':
         arg1 = stack.pop()
         out_seq += f'{arg1}: '
@@ -87,11 +73,11 @@ while i < len(t):
         if t[i] == '=':
             arg1 = stack.pop()
             arg2 = stack.pop()
-            out_seq += f'{arg2} = {arg1};\n'
+            out_seq += f'{arg2} = {arg1}\n'
         else:
             operation = replace[t[i]] if t[i] in replace else t[i]
             arg1 = stack.pop()
-            if t[i] != '!': #not
+            if t[i] != '!':
                 arg2 = stack.pop()
                 stack.append(f'({arg2} {operation} {arg1})')
             else:
@@ -111,21 +97,14 @@ while i < len(t):
             a.append(stack.pop())
             k -= 1
         a.reverse()
-        if a[0] == 'scanf':
-            b = []
-            for j in a[1:]:
-                if variable[j] == 'int':
-                    b.append('%d')
-                elif variable[j] == 'double':
-                    b.append('%f')
-            out_seq += a[0] + '("' + ' '.join(b) + '", ' + ', '.join(map(lambda x: '&' + x, a[1:])) + ');\n'
-        else:
-            out_seq += a[0] + '(' + ', '.join(a[1:]) + ');\n'
+        stack.append(a[0] + '(' + ', '.join(a[1:]) + ')')
+    elif t[i] == 'print':
+        out_seq += t[i] + '(' + stack.pop() + ')\n'
     i += 1
 
-out_seq = re.sub(r'(М\d+): if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)goto \1;\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
-out_seq = re.sub(r'if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)goto (М\d+);\n\2: ((?:\n|.)+)\n?\4: ', r'if \1 {\n\3\n} else {\n\5\n}\n', out_seq)
-out_seq = re.sub(r'if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)\2: ', r'if \1 {\n\3\n}\n', out_seq)
+out_seq = re.sub(r'(М\d+): if \(!\(\((.*)\)\)\): goto (М\d+)(?:\n|\n((?:.|\n)+)\n)goto \1\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
+out_seq = re.sub(r'if \(!\(\((.*)\)\)\): goto (М\d+)(?:\n|\n((?:.|\n)+)\n)goto (М\d+)\n\2: ((?:.|\n)+)\n?\4: ', r'if \1 {\n\3\n} else {\n\5\n}\n', out_seq)
+out_seq = re.sub(r'if \(!\(\((.*)\)\)\): goto (М\d+)(?:\n|\n((?:.|\n)+)\n)\2: ', r'if \1 {\n\3\n}\n', out_seq)
 
 c = 0
 a = out_seq.split('\n')
@@ -134,16 +113,20 @@ for i in range(len(a)):
         continue
     if a[i][0] == '}':
         c -= 1
-    a[i] = 4 * c * ' ' + a[i]
+    a[i] = 4*c*' ' + a[i]
     if a[i][len(a[i]) - 1] == '{':
+        a[i] = re.sub(r'[ ]*{$', r':', a[i])
         c += 1
+out_seq = '\n'.join(a)
+out_seq = re.sub(r'}[ ]*', r'', out_seq)
+a = out_seq.split('\n')
 a = [i for i in a if len(i.strip()) > 0]
 out_seq = '\n'.join(a)
-out_seq = '#include <stdio.h>\n\n' + out_seq
-while re.search(r'= \(([^\)]+)\);\n', out_seq):
-    out_seq = re.sub(r'= \(([^\)]+)\);\n', r'= \1;\n', out_seq)
+out_seq = re.sub(r'([^ ]+) = input\(([^\)]*)\)\n\1 = int\(\1\)', r'\1 = int(input(\2))', out_seq)
+while re.search(r'= \(([^\)]+)\)\n', out_seq):
+    out_seq = re.sub(r'= \(([^\)]+)\)\n', r'= \1\n', out_seq)
 
 # файл, содержащий текст на выходном языке программирования
-f = open('c.txt', 'w')
+f = open('python.txt', 'w')
 f.write(out_seq)
 f.close()

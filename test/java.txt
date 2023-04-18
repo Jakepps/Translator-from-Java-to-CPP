@@ -1,5 +1,4 @@
-public static void main(String[] args)
-{
+
     int b = 0;
     while (b < 1000)
     {
@@ -10,4 +9,3 @@ public static void main(String[] args)
         b *= 333;
         System.out.println(b);
     }
-}
