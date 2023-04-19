@@ -1,0 +1,7 @@
+var x, i: integer;
+begin
+  i := 2;
+  while (i <= x-1) do begin
+    i := i+1;
+  end;
+end.

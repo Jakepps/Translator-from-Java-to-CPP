@@ -1,0 +1,1 @@
+public static void 2 ющл String args b int 0 = b 100 < M1 сок b 333 *= M1 : main 
