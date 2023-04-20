@@ -1,1 +1,1 @@
-Example6 1 1 мо x flag i 3 integer 1 1 йн write 'x = ' 1 т readln x 1 т flag 1 := i 2 := л1 : i x 1 - <= flag 1 = and л2 сок x i mod 0 = л3 сок flag 0 := л3 : i i 1 + := л1 ао л2 : flag 1 = л4 сок writeln 'YES' 1 т л5 ао л4 : writeln 'NO' 1 т л5 : йо 
+Example6 1 1 мо x i 2 integer 1 1 йн л1 : i x 1 - <= л2 сок i i 1 + := л1 ао л2 : writeln 'YES' 1 т йо 

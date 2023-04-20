@@ -1,5 +1,5 @@
+int main () {
 b = 0
-M1: if (b < 1000) M2
-goto M1
-M2: if (b < 100) M3
-M3: 
+if (!((b < 100))) goto M1;
+M1: printf(b *= 333)
+}

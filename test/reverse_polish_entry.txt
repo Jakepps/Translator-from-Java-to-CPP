@@ -1,1 +1,1 @@
-public static void 2 ющл String args b int 0 = M1 : b 1000 < M2 сок b 1 += M1 ао M2 : b 100 < M3 сок b 333 *= System.out.println b M3 : main 
+public static void 2 ющл String args b int 0 = b 100 < M1 сок b 333 *= M1 : System.out.println b main 
