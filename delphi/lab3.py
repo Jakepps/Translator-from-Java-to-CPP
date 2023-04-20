@@ -44,8 +44,6 @@ out_seq = ''
 is_func = False
 variable = {}
 while i < len(t):
-    if (t[i] == "writeln"):
-        kk=2;
     if is_func == True and not(is_identifier(t[i])):
         out_seq += '() {\n'
         is_func = False
@@ -125,25 +123,29 @@ while i < len(t):
             out_seq += a[0] + '(' + ', '.join(a[1:]) + ');\n'
     i += 1
 
-# out_seq = re.sub(r'(М\d+): if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)goto \1;\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
-# out_seq = re.sub(r'if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)goto (М\d+);\n\2: ((?:\n|.)+)\n?\4: ', r'if \1 {\n\3\n} else {\n\5\n}\n', out_seq)
-# out_seq = re.sub(r'if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)\2: ', r'if \1 {\n\3\n}\n', out_seq)
+f = open('c1.txt', 'w')
+f.write(out_seq)
+f.close()
 
-# c = 0
-# a = out_seq.split('\n')
-# for i in range(len(a)):
-#     if len(a[i]) == 0:
-#         continue
-#     if a[i][0] == '}':
-#         c -= 1
-#     a[i] = 4*c*' ' + a[i]
-#     if a[i][len(a[i]) - 1] == '{':
-#         c += 1
-# a = [i for i in a if len(i.strip()) > 0]
-# out_seq = '\n'.join(a)
-# out_seq = '#include <stdio.h>\n\n' + out_seq
-# while re.search(r'= \(([^\)]+)\);\n', out_seq):
-#     out_seq = re.sub(r'= \(([^\)]+)\);\n', r'= \1;\n', out_seq)
+out_seq = re.sub(r'(М\d+): if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)goto \1;\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
+out_seq = re.sub(r'if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)goto (М\d+);\n\2: ((?:\n|.)+)\n?\4: ', r'if \1 {\n\3\n} else {\n\5\n}\n', out_seq)
+out_seq = re.sub(r'if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)\2: ', r'if \1 {\n\3\n}\n', out_seq)
+
+c = 0
+a = out_seq.split('\n')
+for i in range(len(a)):
+    if len(a[i]) == 0:
+        continue
+    if a[i][0] == '}':
+        c -= 1
+    a[i] = 4*c*' ' + a[i]
+    if a[i][len(a[i]) - 1] == '{':
+        c += 1
+a = [i for i in a if len(i.strip()) > 0]
+out_seq = '\n'.join(a)
+out_seq = '#include <stdio.h>\n\n' + out_seq
+while re.search(r'= \(([^\)]+)\);\n', out_seq):
+    out_seq = re.sub(r'= \(([^\)]+)\);\n', r'= \1;\n', out_seq)
 
 # файл, содержащий текст на выходном языке программирования
 f = open('c.txt', 'w')

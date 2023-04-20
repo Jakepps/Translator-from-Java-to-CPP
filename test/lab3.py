@@ -1,11 +1,12 @@
 import lab2
 import json
 import re
+import autopep8
 
 CLASSES_OF_TOKENS = ['W', 'I', 'O', 'R', 'N', 'C']
 
 def is_identifier(token):
-    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^M\d+$', token) or token in ['String[]', 'args', 'System.out.println','System.out.print']
+    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^M\d+$', token) or token in ['String[]', 'args', 'System.out.println','System.out.print','int']
 
 def is_constant(token):
     return ((token in inverse_tokens) and re.match(r'^C\d+$', inverse_tokens[token])) or ((token in inverse_tokens) and re.match(r'^N\d+$', inverse_tokens[token])) or token.isdigit()
@@ -34,17 +35,17 @@ replace = {'in.nextInt()': 'scanf', 'in.nextDouble()': 'scanf', 'in.nextLine()':
 f = open('reverse_polish_entry.txt', 'r')
 inp_seq = f.read()
 inp_seq = inp_seq.replace("public static void 2 АЭМ String args ","String[] args НП ")
-inp_seq = inp_seq.replace("main"," КП")
-inp_seq = inp_seq.replace("System.out.println "," printf ")
+inp_seq = re.sub(r"(System\.out\.println\s+)(\w+)", r"\g<1>\g<2> 1 Ф", inp_seq)
+inp_seq = inp_seq.replace("main "," КП")
 f.close()
 
 t = re.findall(r'(?:\'[^\']*\')|(?:"[^"]*")|(?:[^ ]+)', inp_seq)
-
 
 i = 0
 stack = []
 out_seq = ''
 is_func = False
+variable = {}
 while i < len(t):
     if is_func == True and not(is_identifier(t[i])):
         out_seq += ' {\n'
@@ -55,7 +56,7 @@ while i < len(t):
         stack.pop()
         stack.pop()
         #arg1 = stack.pop()
-        out_seq += 'int main ()'
+        out_seq += 'void main ()'
         is_func = True
     elif t[i] == 'КП':
         out_seq += '}\n'
@@ -68,15 +69,23 @@ while i < len(t):
         out_seq += f'if (!({arg2})) goto {arg1};\n'
     elif t[i] == 'БП':
         arg1 = stack.pop()
-        out_seq += f'goto {arg1}\n'
+        out_seq += f'goto {arg1};\n'
     elif t[i] == ':':
         arg1 = stack.pop()
+        #arg2 = stack.pop()
+       # out_seq += f'{arg2}\n'
         out_seq += f'{arg1}: '
     elif is_operation(t[i]):
         if t[i] == '=':
             arg1 = stack.pop()
+            arg0 = stack.pop()
             arg2 = stack.pop()
-            out_seq += f'{arg2} = {arg1}\n'
+            out_seq += f'{arg0} {arg2} = {arg1};\n'
+        elif t[i] in ['+=', '-=', '*=', '/=']:
+            op = t[i][0]
+            arg1 = stack.pop()
+            arg2 = stack.pop()
+            out_seq += f'{arg2} {op}= {arg1};\n'
         else:
             operation = replace[t[i]] if t[i] in replace else t[i]
             arg1 = stack.pop()
@@ -100,36 +109,24 @@ while i < len(t):
             a.append(stack.pop())
             k -= 1
         a.reverse()
-        stack.append(a[0] + '(' + ', '.join(a[1:]) + ')')
-    elif t[i] == 'printf':
-        out_seq += t[i] + stack.pop() + '\n'
+        if a[0] == 'scanf':
+            b = []
+            for j in a[1:]:
+                if variable[j] == 'int':
+                    b.append('%d')
+                elif variable[j] == 'double':
+                    b.append('%f')
+            out_seq += a[0] + '("' + ' '.join(b) + '", ' + ', '.join(map(lambda x: '&' + x, a[1:])) + ');\n'
+        else:
+            out_seq += a[0] + '(' + ', '.join(a[1:]) + ');\n'
     i += 1
 
-#out_seq = re.sub(r'(M\d+): if \(!\(\((.*)\)\)\): goto (M\d+)(?:\n|\n((?:.|\n)+)\n)goto \1\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
-out_seq = re.sub(r'(if \(\!\(\((.*?)\)\)\) goto (M\d+);\n\2: printf\((.*?)\);', r'if (\1) {\n  printf(\3);\n}', out_seq)
-out_seq = re.sub(r'if \(!\(\((.*)\)\)\): goto (M\d+)(?:\n|\n((?:.|\n)+)\n)goto (M\d+)\n\2: ((?:.|\n)+)\n?\4: ', r'if \1 {\n\3\n} else {\n\5\n}\n', out_seq)
-out_seq = re.sub(r'if \(!\(\((.*)\)\)\): goto (M\d+)(?:\n|\n((?:.|\n)+)\n)\2: ', r'if \1 {\n\3\n}\n', out_seq)
+out_seq = re.sub(r'(М\d+): if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)goto \1;\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
+out_seq = re.sub(r'if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)goto (М\d+);\n\2: ((?:\n|.)+)\n?\4: ', r'if \1 {\n\3\n} else {\n\5\n}\n', out_seq)
+out_seq = re.sub(r"if\s*\(\s*!\s*\(\s*(.*)\s*\)\s*\)\s*goto\s+(M\d+)\s*;\s*(\n(?:.|\n)+?)\s*\2:\s*", r"if \1 {\n\3}\n", out_seq)
 
-
-# c = 0
-# a = out_seq.split('\n')
-# for i in range(len(a)):
-#     if len(a[i]) == 0:
-#         continue
-#     if a[i][0] == '}':
-#         c -= 1
-#     a[i] = 4*c*' ' + a[i]
-#     if a[i][len(a[i]) - 1] == '{':
-#         a[i] = re.sub(r'[ ]*{$', r':', a[i])
-#         c += 1
-# out_seq = '\n'.join(a)
-# out_seq = re.sub(r'}[ ]*', r'', out_seq)
-# a = out_seq.split('\n')
-# a = [i for i in a if len(i.strip()) > 0]
-# out_seq = '\n'.join(a)
-# out_seq = re.sub(r'([^ ]+) = input\(([^\)]*)\)\n\1 = int\(\1\)', r'\1 = int(input(\2))', out_seq)
-# while re.search(r'= \(([^\)]+)\)\n', out_seq):
-#     out_seq = re.sub(r'= \(([^\)]+)\)\n', r'= \1\n', out_seq)
+out_seq = '#include <stdio.h>\n\n' + out_seq
+out_seq = autopep8.fix_code(out_seq)
 
 # файл, содержащий текст на выходном языке программирования
 f = open('C++.txt', 'w')

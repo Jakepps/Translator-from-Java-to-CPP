@@ -1,1 +1,1 @@
-Example6 1 1 мо i 1 integer 1 1 йн л1 : i 1 < л2 сок i i := л1 ао л2 : writeln i 1 т йо 
+Example6 1 1 мо b 1 Integer 1 1 йн b 0 := b 100 < л1 сок b b 333 * := л1 : writeln b 1 т йо 

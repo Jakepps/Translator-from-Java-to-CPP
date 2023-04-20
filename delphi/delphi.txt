@@ -1,8 +1,8 @@
 program Example6;
-var i: integer;
+var b: Integer;
 begin
-  while (i < 1) do begin
-    i := i;
-  end;
-  writeln(i)
+    b := 0;
+    if b < 100 then
+      b := b * 333;
+  writeln(b);
 end.

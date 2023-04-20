@@ -1,0 +1,6 @@
+void main() {
+b = 0;
+if (!((b < 100))) goto Ì1;
+b = (b * 333);
+Ì1: printf(b);
+}
