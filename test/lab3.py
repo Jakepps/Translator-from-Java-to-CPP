@@ -5,7 +5,7 @@ import re
 CLASSES_OF_TOKENS = ['W', 'I', 'O', 'R', 'N', 'C']
 
 def is_identifier(token):
-    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^М\d+$', token) or token in ['int','double', 'boolean']
+    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^M\d+$', token)
 
 def is_constant(token):
     return ((token in inverse_tokens) and re.match(r'^C\d+$', inverse_tokens[token])) or ((token in inverse_tokens) and re.match(r'^N\d+$', inverse_tokens[token])) or token.isdigit()
@@ -33,6 +33,8 @@ replace = {'in.nextInt()': 'scanf', 'in.nextDouble()': 'scanf', 'in.nextLine()':
 # файл, содержащий обратную польскую запись
 f = open('reverse_polish_entry.txt', 'r')
 inp_seq = f.read()
+inp_seq = inp_seq.replace("public static void 2 АЭМ String args ","")
+inp_seq = inp_seq.replace("System.out.println ","printf")
 f.close()
 
 t = re.findall(r'(?:\'[^\']*\')|(?:"[^"]*")|(?:[^ ]+)', inp_seq)
@@ -52,7 +54,7 @@ while i < len(t):
         stack.pop()
         stack.pop()
         arg1 = stack.pop()
-        out_seq += f'function {arg1}'
+        out_seq += f'public static function {arg1}'
         is_func = True
     elif t[i] == 'КП':
         out_seq += '}'
@@ -62,7 +64,7 @@ while i < len(t):
     elif t[i] == 'УПЛ':
         arg1 = stack.pop()
         arg2 = stack.pop()
-        out_seq += f'if (!({arg2})) {arg1}\n'
+        out_seq += f'if {arg2} {arg1}\n'
     elif t[i] == 'БП':
         arg1 = stack.pop()
         out_seq += f'goto {arg1}\n'
@@ -98,13 +100,13 @@ while i < len(t):
             k -= 1
         a.reverse()
         stack.append(a[0] + '(' + ', '.join(a[1:]) + ')')
-    elif t[i] == 'print':
-        out_seq += t[i] + '(' + stack.pop() + ')\n'
+    elif t[i] == 'printf':
+        out_seq += t[i] + stack.pop() + '\n'
     i += 1
 
-out_seq = re.sub(r'(М\d+): if \(!\(\((.*)\)\)\): goto (М\d+)(?:\n|\n((?:.|\n)+)\n)goto \1\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
-out_seq = re.sub(r'if \(!\(\((.*)\)\)\): goto (М\d+)(?:\n|\n((?:.|\n)+)\n)goto (М\d+)\n\2: ((?:.|\n)+)\n?\4: ', r'if \1 {\n\3\n} else {\n\5\n}\n', out_seq)
-out_seq = re.sub(r'if \(!\(\((.*)\)\)\): goto (М\d+)(?:\n|\n((?:.|\n)+)\n)\2: ', r'if \1 {\n\3\n}\n', out_seq)
+out_seq = re.sub(r'(M\d+): if \(!\(\((.*)\)\)\): goto (M\d+)(?:\n|\n((?:.|\n)+)\n)goto \1\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
+out_seq = re.sub(r'if \(!\(\((.*)\)\)\): goto (M\d+)(?:\n|\n((?:.|\n)+)\n)goto (M\d+)\n\2: ((?:.|\n)+)\n?\4: ', r'if \1 {\n\3\n} else {\n\5\n}\n', out_seq)
+out_seq = re.sub(r'if \(!\(\((.*)\)\)\): goto (M\d+)(?:\n|\n((?:.|\n)+)\n)\2: ', r'if \1 {\n\3\n}\n', out_seq)
 
 c = 0
 a = out_seq.split('\n')
@@ -127,6 +129,6 @@ while re.search(r'= \(([^\)]+)\)\n', out_seq):
     out_seq = re.sub(r'= \(([^\)]+)\)\n', r'= \1\n', out_seq)
 
 # файл, содержащий текст на выходном языке программирования
-f = open('python.txt', 'w')
+f = open('C++.txt', 'w')
 f.write(out_seq)
 f.close()

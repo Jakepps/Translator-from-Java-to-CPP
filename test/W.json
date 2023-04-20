@@ -49,5 +49,8 @@
     "W48": "System",
     "W49": "out",
     "W50": "String",
-    "W51": "args"
+    "W51": "args",
+    "W52": "in.nextInt()",
+    "W53": "in.nextDouble()",
+    "W54": "in.nextLine()"
 }

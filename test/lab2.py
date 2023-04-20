@@ -94,15 +94,15 @@ while i < len(t):
                     while stack[-1] != 'if':
                         out_seq += stack.pop() + ' '
                     tag_count += 1
-                    stack[-1] += ' М' + str(tag_count)
-                    out_seq += 'М' + str(tag_count) + ' УПЛ '
+                    stack[-1] += ' M' + str(tag_count)
+                    out_seq += 'M' + str(tag_count) + ' УПЛ '
                     is_if = False
                 if is_while:
-                    while not(re.match(r'^while М\d+$', stack[-1])):
+                    while not(re.match(r'^while M\d+$', stack[-1])):
                         out_seq += stack.pop() + ' '
                     tag_count += 1
-                    out_seq += 'М' + str(tag_count) + ' УПЛ '
-                    stack[-1] += ' М' + str(tag_count)
+                    out_seq += 'M' + str(tag_count) + ' УПЛ '
+                    stack[-1] += ' M' + str(tag_count)
                     is_while = False
         elif t[i] == ',':
             while not(re.match(r'^\d+ АЭМ$', stack[-1])) and \
@@ -121,16 +121,16 @@ while i < len(t):
             bracket_count = 0
             is_if = True
         elif t[i] == 'else':
-            while not(re.match(r'^if М\d+$', stack[-1])):
+            while not(re.match(r'^if M\d+$', stack[-1])):
                 out_seq += stack.pop() + ' '
             stack.pop()
             tag_count += 1
-            stack.append('if М' + str(tag_count))
-            out_seq += 'М' + str(tag_count) + ' БП М' + str(tag_count - 1) + ' : '
+            stack.append('if M' + str(tag_count))
+            out_seq += 'M' + str(tag_count) + ' БП M' + str(tag_count - 1) + ' : '
         elif t[i] == 'while':
             tag_count += 1
-            stack.append(t[i] + ' М' + str(tag_count))
-            out_seq += 'М' + str(tag_count) + ' : '
+            stack.append(t[i] + ' M' + str(tag_count))
+            out_seq += 'M' + str(tag_count) + ' : '
             while_count += 1
             bracket_count = 0
             is_while = True
@@ -205,8 +205,8 @@ while i < len(t):
             if len(stack) > 0 and re.match(r'^PROC', stack[-1]):
                 stack.pop()
                 out_seq += 'КП '
-            if if_count > 0 and re.match(r'^if М\d+$', stack[-1]):
-                tag = re.search('М\d+', stack[-1]).group(0)
+            if if_count > 0 and re.match(r'^if M\d+$', stack[-1]):
+                tag = re.search('M\d+', stack[-1]).group(0)
                 j = i + 1
                 while j < len(t) and t[j] == '\n':
                     j += 1
@@ -214,8 +214,8 @@ while i < len(t):
                     stack.pop()
                     out_seq += tag + ' : '
                     if_count -= 1
-            if while_count > 0 and re.match(r'^while М\d+ М\d+$', stack[-1]):
-                tag = re.findall('М\d+', stack[-1])
+            if while_count > 0 and re.match(r'^while M\d+ M\d+$', stack[-1]):
+                tag = re.findall('M\d+', stack[-1])
                 stack.pop()
                 out_seq += tag[0] + ' БП ' + tag[1] + ' : '
                 while_count -= 1
@@ -235,11 +235,11 @@ while i < len(t):
                 is_description_var = False
             elif if_count > 0 or while_count > 0:
                 while not(len(stack) > 0 and stack[-1] == '{') and \
-                    not(if_count > 0 and re.match(r'^if М\d+$', stack[-1])) and \
-                    not(while_count > 0 and re.match(r'^while М\d+ М\d+$', stack[-1])):
+                    not(if_count > 0 and re.match(r'^if M\d+$', stack[-1])) and \
+                    not(while_count > 0 and re.match(r'^while M\d+ M\d+$', stack[-1])):
                     out_seq += stack.pop() + ' '
-                if if_count > 0 and re.match(r'^if М\d+$', stack[-1]):
-                    tag = re.search('М\d+', stack[-1]).group(0)
+                if if_count > 0 and re.match(r'^if M\d+$', stack[-1]):
+                    tag = re.search('M\d+', stack[-1]).group(0)
                     j = i + 1
                     while t[j] == '\n':
                         j += 1
@@ -247,8 +247,8 @@ while i < len(t):
                         stack.pop()
                     out_seq += tag + ' : '
                     if_count -= 1
-                if while_count > 0 and re.match(r'^while М\d+ М\d+$', stack[-1]):
-                    tag = re.findall('М\d+', stack[-1])
+                if while_count > 0 and re.match(r'^while M\d+ M\d+$', stack[-1]):
+                    tag = re.findall('M\d+', stack[-1])
                     out_seq += tag[0] + ' БП ' + tag[1] + ' : '
                     while_count -= 1
             else:

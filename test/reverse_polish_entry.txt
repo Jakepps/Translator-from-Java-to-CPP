@@ -1,1 +1,1 @@
-b int 0 = Ì1 : b 1000 < Ì2 ÓÏË b 1 += Ì1 ÁÏ Ì2 : b 100 < Ì3 ÓÏË b 333 *= System.out.println b Ì3 : 
+public static void 2 ÀİÌ String args b int 0 = M1 : b 1000 < M2 ÓÏË b 1 += M1 ÁÏ M2 : b 100 < M3 ÓÏË b 333 *= System.out.println b M3 : main 
