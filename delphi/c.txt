@@ -1,0 +1,7 @@
+void main() {
+int i;
+Ì1: if (!((i < 1))) goto Ì2;
+i = i;
+goto Ì1;
+Ì2: printf(i);
+}

@@ -1,8 +1,8 @@
 program Example6;
-var x, i: integer;
+var i: integer;
 begin
-  while (i <= x-1) do begin
-    i := i+1;
+  while (i < 1) do begin
+    i := i;
   end;
-  writeln('YES')
+  writeln(i)
 end.

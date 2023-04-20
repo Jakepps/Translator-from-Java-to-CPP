@@ -5,7 +5,7 @@ import re
 CLASSES_OF_TOKENS = ['W', 'I', 'O', 'R', 'N', 'C']
 
 def is_identifier(token):
-    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^M\d+$', token) or token in ['String[]', 'args']
+    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^M\d+$', token) or token in ['String[]', 'args', 'System.out.println','System.out.print']
 
 def is_constant(token):
     return ((token in inverse_tokens) and re.match(r'^C\d+$', inverse_tokens[token])) or ((token in inverse_tokens) and re.match(r'^N\d+$', inverse_tokens[token])) or token.isdigit()
@@ -106,7 +106,7 @@ while i < len(t):
     i += 1
 
 #out_seq = re.sub(r'(M\d+): if \(!\(\((.*)\)\)\): goto (M\d+)(?:\n|\n((?:.|\n)+)\n)goto \1\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
-out_seq = re.sub(r'if \(\!\(\((.*?)\)\)\) goto (M\d+);\n\2: printf\((.*?)\);', r'if (\1) {\n  printf(\3);\n}', out_seq)
+out_seq = re.sub(r'(if \(\!\(\((.*?)\)\)\) goto (M\d+);\n\2: printf\((.*?)\);', r'if (\1) {\n  printf(\3);\n}', out_seq)
 out_seq = re.sub(r'if \(!\(\((.*)\)\)\): goto (M\d+)(?:\n|\n((?:.|\n)+)\n)goto (M\d+)\n\2: ((?:.|\n)+)\n?\4: ', r'if \1 {\n\3\n} else {\n\5\n}\n', out_seq)
 out_seq = re.sub(r'if \(!\(\((.*)\)\)\): goto (M\d+)(?:\n|\n((?:.|\n)+)\n)\2: ', r'if \1 {\n\3\n}\n', out_seq)
 
