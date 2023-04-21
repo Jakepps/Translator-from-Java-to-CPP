@@ -1,7 +1,9 @@
 public static void main(String[] args)
 {
     int b = 0;
-    while (b < 100)
+    if (b < 100)
         b *= 333;
+    else
+        b -= 222;
     System.out.println(b);
 }

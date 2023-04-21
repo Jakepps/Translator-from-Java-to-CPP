@@ -4,8 +4,8 @@ void main() {
     b = 0;
     if (b < 100) {
         b = b * 333;
+    } else {
+        b = b - 222;
     }
-    else
-
     printf(b);
 }

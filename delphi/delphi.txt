@@ -1,8 +1,11 @@
 program Example6;
 var b: Integer;
 begin
-    b := 0;
-    if b < 100 then
-      b := b * 333;
+  b := 0;
+  if b < 100 then
+    b := b * 333
+  else
+    b := b - 222;
   writeln(b);
 end.
+

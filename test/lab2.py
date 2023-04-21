@@ -26,7 +26,7 @@ def get_priority(token):
         return 7
     if token in ['*', '/', '%']:
         return 8
-    if token in ['}', 'public','static','void', 'procedure','int', 'double', 'boolean', 'String', 'float', 'args','return','System.out.println', 'main']:
+    if token in ['}', 'public','static','void', 'procedure','int', 'double', 'boolean', 'String', 'float', 'args','return','System.out.println', 'main', 'in.nextInt()', 'in.nextDouble()', 'in.nextLine()']:
         return 9
     return -1
 

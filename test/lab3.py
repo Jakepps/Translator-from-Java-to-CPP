@@ -29,7 +29,7 @@ for token_class in CLASSES_OF_TOKENS:
 # лексемы (значение-код)
 inverse_tokens = {val: key for key, val in tokens.items()}
 
-replace = {'in.nextInt()': 'scanf', 'in.nextDouble()': 'scanf', 'in.nextLine()': 'scanf', 'System.out.println': 'printf', 'System.out.print': 'printf', 'int': 'int', 'double': 'double', '=': '=', '||': '||', '&&': '&&', '!=': '!=', '==': '==', '/': '/', '%': '%', '!': '!'}
+replace = {'in.nextInt()': 'cin>>', 'in.nextDouble()': 'cin>>', 'in.nextLine()': 'cin>>', 'System.out.println': 'cout<<', 'System.out.print': 'cout<<', 'int': 'int', 'double': 'double', '=': '=', '||': '||', '&&': '&&', '!=': '!=', '==': '==', '/': '/', '%': '%', '!': '!'}
 
 # файл, содержащий обратную польскую запись
 f = open('reverse_polish_entry.txt', 'r')
@@ -109,16 +109,11 @@ while i < len(t):
             a.append(stack.pop())
             k -= 1
         a.reverse()
-        if a[0] == 'scanf':
+        if a[0] == 'cin>>':
             b = []
-            for j in a[1:]:
-                if variable[j] == 'int':
-                    b.append('%d')
-                elif variable[j] == 'double':
-                    b.append('%f')
             out_seq += a[0] + '("' + ' '.join(b) + '", ' + ', '.join(map(lambda x: '&' + x, a[1:])) + ');\n'
         else:
-            out_seq += a[0] + '(' + ', '.join(a[1:]) + ');\n'
+            out_seq += a[0] + ', '.join(a[1:]) + ';\n'
     i += 1
 
 #while
@@ -131,10 +126,10 @@ out_seq = re.sub(r'if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)goto (М\
 #if
 out_seq = re.sub(r"if\s*\(\s*!\s*\(\s*(.*)\s*\)\s*\)\s*goto\s+(M\d+)\s*;\s*(\n(?:.|\n)+?)\s*\2:\s*", r"if \1 {\n\3}\n", out_seq)
 
-out_seq = '#include <stdio.h>\n\n' + out_seq
-out_seq = autopep8.fix_code(out_seq)
+out_seq = 'using namespace std;\n\n' + out_seq
+out_seq = autopep8.fix_code(out_seq, options={'aggressive': 1})
 
 # файл, содержащий текст на выходном языке программирования
-f = open('C++.txt', 'w')
+f = open('c++.txt', 'w')
 f.write(out_seq)
 f.close()
