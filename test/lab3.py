@@ -1,15 +1,14 @@
 import lab2
 import json
 import re
-import autopep8
 
 CLASSES_OF_TOKENS = ['W', 'I', 'O', 'R', 'N', 'C']
 
 def is_identifier(token):
-    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^M\d+$', token) or token in ['String[]', 'args', 'System.out.println','System.out.print','int']
+    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^M\d+$', token) or token in ['String[]', 'args', 'System.out.println', 'System.out.print', 'int', 'double', 'bool','float']
 
 def is_constant(token):
-    return ((token in inverse_tokens) and re.match(r'^C\d+$', inverse_tokens[token])) or ((token in inverse_tokens) and re.match(r'^N\d+$', inverse_tokens[token])) or token.isdigit()
+    return ((token in inverse_tokens) and re.match(r'^C\d+$', inverse_tokens[token])) or ((token in inverse_tokens) and re.match(r'^N\d+$', inverse_tokens[token])) or token.isdigit() or token in ["in.nextInt()"]
 
 def is_operation(token):
     return (token in inverse_tokens) and re.match(r'^O\d+$', inverse_tokens[token])
@@ -29,7 +28,7 @@ for token_class in CLASSES_OF_TOKENS:
 # лексемы (значение-код)
 inverse_tokens = {val: key for key, val in tokens.items()}
 
-replace = {'in.nextInt()': 'cin >> ', 'in.nextDouble()': 'cin >> ', 'in.nextLine()': 'cin >> ', 'System.out.println': 'cout << ', 'System.out.print': 'cout << ', 'int': 'int', 'double': 'double', '=': '=', '||': '||', '&&': '&&', '!=': '!=', '==': '==', '/': '/', '%': '%', '!': '!'}
+replace = {'in.nextInt()': 'cin >> ', 'System.out.println': 'cout << ', 'System.out.print': 'cout << ', 'int': 'int', 'double': 'double', '=': '=', '||': '||', '&&': '&&', '!=': '!=', '==': '==', '/': '/', '%': '%', '!': '!', '++': '+= 1'}
 
 # файл, содержащий обратную польскую запись
 f = open('reverse_polish_entry.txt', 'r')
@@ -37,6 +36,9 @@ inp_seq = f.read()
 inp_seq = inp_seq.replace("public static void 2 АЭМ String args ","String[] args НП ")
 inp_seq = re.sub(r"(System\.out\.println\s+)(\w+)", r"\g<1>\g<2> 1 Ф", inp_seq)
 inp_seq = inp_seq.replace("main "," КП")
+inp_seq = inp_seq.replace("int in . nextInt 0Ф","in.nextInt()")
+inp_seq = inp_seq.replace("++","1 +=")
+inp_seq = inp_seq.replace("import java . util . Scanner ","")
 f.close()
 
 t = re.findall(r'(?:\'[^\']*\')|(?:"[^"]*")|(?:[^ ]+)', inp_seq)
@@ -50,6 +52,7 @@ while i < len(t):
     if is_func == True and not(is_identifier(t[i])):
         out_seq += ' {\n'
         is_func = False
+
     if is_identifier(t[i]) or is_constant(t[i]):
         stack.append(replace[t[i]] if t[i] in replace else t[i])
     elif t[i] == 'НП':
@@ -72,8 +75,6 @@ while i < len(t):
         out_seq += f'goto {arg1};\n'
     elif t[i] == ':':
         arg1 = stack.pop()
-        #arg2 = stack.pop()
-       # out_seq += f'{arg2}\n'
         out_seq += f'{arg1}: '
     elif is_operation(t[i]):
         if t[i] == '=':
@@ -81,7 +82,7 @@ while i < len(t):
             arg0 = stack.pop()
             arg2 = stack.pop()
             out_seq += f'{arg0} {arg2} = {arg1};\n'
-        elif t[i] in ['+=', '-=', '*=', '/=']:
+        elif t[i] in ['+=', '-=', '*=', '/=', '++']:
             op = t[i][0]
             arg1 = stack.pop()
             arg2 = stack.pop()
@@ -127,7 +128,6 @@ out_seq = re.sub(r'if\s*\((.*)\s*<\s*(.*)\)\s*{\s*(.*?)\s*}\s*else\s*{\s*(.*?)\s
 out_seq = re.sub(r"if\s*\(\s*!\s*\(\s*(.*)\s*\)\s*\)\s*goto\s+(M\d+)\s*;\s*(\n(?:.|\n)+?)\s*\2:\s*", r"if \1 {\n\3}\n", out_seq)
 
 out_seq = 'using namespace std;\n\n' + out_seq
-#out_seq = autopep8.fix_code(out_seq, options={'aggressive': 1})
 
 out_seq = re.sub(r"goto M(\d);", r"else {", out_seq)
 out_seq = re.sub(r"M(\d): ", r"", out_seq)
@@ -147,7 +147,9 @@ def indent_cpp_code(code):
     return indented_code
 
 out_seq = indent_cpp_code(out_seq)
-
+out_seq = out_seq.replace("+= 1","++")
+#out_seq = out_seq + "}\n";
+stack.clear()
 # файл, содержащий текст на выходном языке программирования
 f = open('c++.txt', 'w')
 f.write(out_seq)

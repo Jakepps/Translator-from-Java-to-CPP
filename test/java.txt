@@ -1,11 +1,12 @@
 public static void main(String[] args)
 {
-    int b = 0;
-    while (b > 100)
-        b *= 122;
-    if (b < 100)
-        b *= 333;
-    else
-        b -= 22;
-    System.out.println(b);
+    int a = 5;
+    int b = 5;
+    int result = 1;
+
+    while (a <= b) {
+        result *= a;
+        a ++;
+    }
+    System.out.println(result);
 }
