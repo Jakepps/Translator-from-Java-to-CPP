@@ -29,7 +29,7 @@ for token_class in CLASSES_OF_TOKENS:
 # лексемы (значение-код)
 inverse_tokens = {val: key for key, val in tokens.items()}
 
-replace = {'in.nextInt()': 'cin>>', 'in.nextDouble()': 'cin>>', 'in.nextLine()': 'cin>>', 'System.out.println': 'cout<<', 'System.out.print': 'cout<<', 'int': 'int', 'double': 'double', '=': '=', '||': '||', '&&': '&&', '!=': '!=', '==': '==', '/': '/', '%': '%', '!': '!'}
+replace = {'in.nextInt()': 'cin >> ', 'in.nextDouble()': 'cin >> ', 'in.nextLine()': 'cin >> ', 'System.out.println': 'cout << ', 'System.out.print': 'cout << ', 'int': 'int', 'double': 'double', '=': '=', '||': '||', '&&': '&&', '!=': '!=', '==': '==', '/': '/', '%': '%', '!': '!'}
 
 # файл, содержащий обратную польскую запись
 f = open('reverse_polish_entry.txt', 'r')
@@ -109,7 +109,7 @@ while i < len(t):
             a.append(stack.pop())
             k -= 1
         a.reverse()
-        if a[0] == 'cin>>':
+        if a[0] == 'cin >>':
             b = []
             out_seq += a[0] + '("' + ' '.join(b) + '", ' + ', '.join(map(lambda x: '&' + x, a[1:])) + ');\n'
         else:
@@ -121,13 +121,32 @@ while i < len(t):
 out_seq = re.sub(r'(M\d+): if \(!\((.*)\)\) goto (M\d+);(?:\n|\n((?:.|\n)+)\n)goto \1;\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
 
 # if else
-out_seq = re.sub(r'if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)goto (М\d+);\n\2: ((?:\n|.)+)\n?\4: ', r'if \1 {\n\3\n} else {\n\5\n}\n', out_seq)
+out_seq = re.sub(r'if\s*\((.*)\s*<\s*(.*)\)\s*{\s*(.*?)\s*}\s*else\s*{\s*(.*?)\s*}\s*', r'if (\1 < \2)\n{\n\3\n}\nelse\n{\n\4\n}\n', out_seq)
 
 #if
 out_seq = re.sub(r"if\s*\(\s*!\s*\(\s*(.*)\s*\)\s*\)\s*goto\s+(M\d+)\s*;\s*(\n(?:.|\n)+?)\s*\2:\s*", r"if \1 {\n\3}\n", out_seq)
 
 out_seq = 'using namespace std;\n\n' + out_seq
-out_seq = autopep8.fix_code(out_seq, options={'aggressive': 1})
+#out_seq = autopep8.fix_code(out_seq, options={'aggressive': 1})
+
+out_seq = re.sub(r"goto M(\d);", r"else {", out_seq)
+out_seq = re.sub(r"M(\d): ", r"", out_seq)
+
+def indent_cpp_code(code):
+    indented_code = ""
+    indentation = 0
+    for line in code.split("\n"):
+        if "{" in line:
+            indented_code += ("\t" * indentation) + line + "\n"
+            indentation += 1
+        elif "}" in line:
+            indentation -= 1
+            indented_code += ("\t" * indentation) + line + "\n"
+        else:
+            indented_code += ("\t" * indentation) + line + "\n"
+    return indented_code
+
+out_seq = indent_cpp_code(out_seq)
 
 # файл, содержащий текст на выходном языке программирования
 f = open('c++.txt', 'w')
