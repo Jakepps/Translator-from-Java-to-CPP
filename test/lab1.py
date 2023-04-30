@@ -3,7 +3,7 @@ import json
 
 SERVICE_WORDS = ['abstract', 'case', 'continue', 'extends', 'goto', 'int', 'package', 'short',
                  'try', 'assert', 'catch', 'default', 'final', 'if', 'private',
-                 'static', 'this', 'void', 'bool', 'char', 'do','long', 'protected',
+                 'static', 'this', 'void', 'boolean', 'char', 'do','long', 'protected',
                  'throw', 'volatile', 'break', 'class', 'double', 'float', 'import', 'native',
                  'public', 'super','throws','while','byte','const','else','for','instanceof',
                  'new','return','switch','transient','print','println','main','System',

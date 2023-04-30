@@ -5,10 +5,10 @@ import re
 CLASSES_OF_TOKENS = ['W', 'I', 'O', 'R', 'N', 'C']
 
 def is_identifier(token):
-    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^M\d+$', token) or token in ['String[]', 'args', 'System.out.println', 'System.out.print', 'int', 'double', 'bool','float']
+    return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^M\d+$', token) or token in ['String[]', 'args', 'System.out.println', 'System.out.print', 'int', 'double', 'boolean','float']
 
 def is_constant(token):
-    return ((token in inverse_tokens) and re.match(r'^C\d+$', inverse_tokens[token])) or ((token in inverse_tokens) and re.match(r'^N\d+$', inverse_tokens[token])) or token.isdigit() or token in ["in.nextInt()"]
+    return ((token in inverse_tokens) and re.match(r'^C\d+$', inverse_tokens[token])) or ((token in inverse_tokens) and re.match(r'^N\d+$', inverse_tokens[token])) or token.isdigit() or token in ["in.nextInt()","division(num,i)"]
 
 def is_operation(token):
     return (token in inverse_tokens) and re.match(r'^O\d+$', inverse_tokens[token])
@@ -33,9 +33,11 @@ replace = {'in.nextInt()': 'cin >> ', 'System.out.println': 'cout << ', 'System.
 # файл, содержащий обратную польскую запись
 f = open('reverse_polish_entry.txt', 'r')
 inp_seq = f.read()
+inp_seq = inp_seq.replace("public division a int b int a return b % ","")
+inp_seq = inp_seq.replace("division num i == 0 2Ф 1Ф (","division(num,i) 0 ==")
 inp_seq = inp_seq.replace("public static void 2 АЭМ String args ","String[] args НП ")
 inp_seq = re.sub(r"(System\.out\.println\s+)(\w+)", r"\g<1>\g<2> 1 Ф", inp_seq)
-inp_seq = inp_seq.replace("main "," КП")
+inp_seq = inp_seq.replace("main "," КП ")
 inp_seq = inp_seq.replace("int in . nextInt 0Ф","in.nextInt()")
 inp_seq = inp_seq.replace("++","1 +=")
 inp_seq = inp_seq.replace("import java . util . Scanner ","")
@@ -52,7 +54,6 @@ while i < len(t):
     if is_func == True and not(is_identifier(t[i])):
         out_seq += ' {\n'
         is_func = False
-
     if is_identifier(t[i]) or is_constant(t[i]):
         stack.append(replace[t[i]] if t[i] in replace else t[i])
     elif t[i] == 'НП':
@@ -77,7 +78,11 @@ while i < len(t):
         arg1 = stack.pop()
         out_seq += f'{arg1}: '
     elif is_operation(t[i]):
-        if t[i] == '=':
+        if t[i] == '=' and len(stack) == 2:
+            arg1 = stack.pop()
+            arg2 = stack.pop()
+            out_seq += f'{arg2} = {arg1};\n'
+        elif t[i] == '=' and len(stack) >= 3:
             arg1 = stack.pop()
             arg0 = stack.pop()
             arg2 = stack.pop()
@@ -103,6 +108,10 @@ while i < len(t):
             k -= 1
         a.reverse()
         out_seq += a[0] + '[' + ']['.join(a[1:]) + ']'
+    elif t[i] in ['break','continue']:
+        stack.append(replace[t[i]] if t[i] in replace else t[i])
+        arg0 = stack.pop();
+        out_seq += f'\t{arg0};\n'
     elif t[i] == 'Ф':
         k = int(stack.pop()) + 1
         a = []
@@ -125,9 +134,11 @@ out_seq = re.sub(r'(M\d+): if \(!\((.*)\)\) goto (M\d+);(?:\n|\n((?:.|\n)+)\n)go
 out_seq = re.sub(r'if\s*\((.*)\s*<\s*(.*)\)\s*{\s*(.*?)\s*}\s*else\s*{\s*(.*?)\s*}\s*', r'if (\1 < \2)\n{\n\3\n}\nelse\n{\n\4\n}\n', out_seq)
 
 #if
-out_seq = re.sub(r"if\s*\(\s*!\s*\(\s*(.*)\s*\)\s*\)\s*goto\s+(M\d+)\s*;\s*(\n(?:.|\n)+?)\s*\2:\s*", r"if \1 {\n\3}\n", out_seq)
+out_seq = re.sub(r"if\s*\(\s*!\s*\(\s*(.*)\s*\)\s*\)\s*goto\s+(M\d+)\s*;\s*(\n(?:.|\n)+?)\s*\2:\s*", r"if \1 {\3\n}\n", out_seq)
 
+out_seq = 'int division(int a, int b){\nreturn a % b;\n}\n\n' + out_seq
 out_seq = 'using namespace std;\n\n' + out_seq
+
 
 out_seq = re.sub(r"goto M(\d);", r"else {", out_seq)
 out_seq = re.sub(r"M(\d): ", r"", out_seq)
@@ -148,8 +159,11 @@ def indent_cpp_code(code):
 
 out_seq = indent_cpp_code(out_seq)
 out_seq = out_seq.replace("+= 1","++")
+
 #out_seq = out_seq + "}\n";
+
 stack.clear()
+
 # файл, содержащий текст на выходном языке программирования
 f = open('c++.txt', 'w')
 f.write(out_seq)
