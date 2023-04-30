@@ -16,5 +16,8 @@ public static void main(String[] args)
         i++;
     }
 
-    System.out.println(num);
+    if (isPrime)
+        System.out.println("Yes");
+    else
+        System.out.println("No");
 }

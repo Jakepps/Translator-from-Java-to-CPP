@@ -8,7 +8,7 @@ def is_identifier(token):
     return ((token in inverse_tokens) and re.match(r'^I\d+$', inverse_tokens[token])) or re.match(r'^M\d+$', token) or token in ['String[]', 'args', 'System.out.println', 'System.out.print', 'int', 'double', 'boolean','float']
 
 def is_constant(token):
-    return ((token in inverse_tokens) and re.match(r'^C\d+$', inverse_tokens[token])) or ((token in inverse_tokens) and re.match(r'^N\d+$', inverse_tokens[token])) or token.isdigit() or token in ["in.nextInt()","division(num,i)"]
+    return ((token in inverse_tokens) and re.match(r'^C\d+$', inverse_tokens[token])) or ((token in inverse_tokens) and re.match(r'^N\d+$', inverse_tokens[token])) or token.isdigit() or token in ["in.nextInt()", "division(num,i)","No","Yes"]
 
 def is_operation(token):
     return (token in inverse_tokens) and re.match(r'^O\d+$', inverse_tokens[token])
@@ -33,11 +33,14 @@ replace = {'in.nextInt()': 'cin >> ', 'System.out.println': 'cout << ', 'System.
 # файл, содержащий обратную польскую запись
 f = open('reverse_polish_entry.txt', 'r')
 inp_seq = f.read()
+inp_seq = inp_seq.replace("\"Yes\"","Yes")
+inp_seq = inp_seq.replace("\"No\"","No")
 inp_seq = inp_seq.replace("public division a int b int a return b % ","")
 inp_seq = inp_seq.replace("division num i == 0 2Ф 1Ф (","division(num,i) 0 ==")
 inp_seq = inp_seq.replace("public static void 2 АЭМ String args ","String[] args НП ")
 inp_seq = re.sub(r"(System\.out\.println\s+)(\w+)", r"\g<1>\g<2> 1 Ф", inp_seq)
-inp_seq = inp_seq.replace("main "," КП ")
+inp_seq = inp_seq.replace("main ","")
+inp_seq = inp_seq.replace("static "," КП ")
 inp_seq = inp_seq.replace("int in . nextInt 0Ф","in.nextInt()")
 inp_seq = inp_seq.replace("++","1 +=")
 inp_seq = inp_seq.replace("import java . util . Scanner ","")
@@ -59,11 +62,10 @@ while i < len(t):
     elif t[i] == 'НП':
         stack.pop()
         stack.pop()
-        #arg1 = stack.pop()
         out_seq += 'void main ()'
         is_func = True
     elif t[i] == 'КП':
-        out_seq += '}\n'
+        out_seq += '}\n}'
     elif t[i] == 'КО':
         stack.pop()
         stack.pop()
@@ -112,6 +114,7 @@ while i < len(t):
         stack.append(replace[t[i]] if t[i] in replace else t[i])
         arg0 = stack.pop();
         out_seq += f'\t{arg0};\n'
+
     elif t[i] == 'Ф':
         k = int(stack.pop()) + 1
         a = []
@@ -127,7 +130,6 @@ while i < len(t):
     i += 1
 
 #while
-#out_seq = re.sub(r'(М\d+): if \(!\((.*)\)\) goto (М\d+);(?:\n|\n((?:.|\n)+)\n)goto \1;\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
 out_seq = re.sub(r'(M\d+): if \(!\((.*)\)\) goto (M\d+);(?:\n|\n((?:.|\n)+)\n)goto \1;\n\3: ', r'while \2 {\n\4\n}\n', out_seq)
 
 # if else
@@ -139,6 +141,8 @@ out_seq = re.sub(r"if\s*\(\s*!\s*\(\s*(.*)\s*\)\s*\)\s*goto\s+(M\d+)\s*;\s*(\n(?
 out_seq = 'int division(int a, int b){\nreturn a % b;\n}\n\n' + out_seq
 out_seq = 'using namespace std;\n\n' + out_seq
 
+out_seq = out_seq.replace("Yes;","\"Yes\";")
+out_seq = out_seq.replace("No;","\"No\";")
 
 out_seq = re.sub(r"goto M(\d);", r"else {", out_seq)
 out_seq = re.sub(r"M(\d): ", r"", out_seq)
