@@ -1,0 +1,23 @@
+public static division (int a, int b) {
+    return a % b;
+}
+
+public static void main(String[] args)
+{
+    int num = 14;
+    boolean isPrime = true;
+    int i = 2;
+
+    while (i <= num) {
+        if (division(num,i) == 0) {
+            isPrime = false;
+            break;
+        }
+        i++;
+    }
+
+    if (isPrime)
+        System.out.println("Yes");
+    else
+        System.out.println("No");
+}
