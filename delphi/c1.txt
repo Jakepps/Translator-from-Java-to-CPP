@@ -1,8 +1,0 @@
-void main() {
-b = 0;
-if (!((b < 100))) goto Ì1;
-b = (b * 333);
-goto Ì2;
-Ì1: b = (b - 222);
-Ì2: printf(b);
-}

@@ -28,7 +28,7 @@ for token_class in CLASSES_OF_TOKENS:
 # лексемы (значение-код)
 inverse_tokens = {val: key for key, val in tokens.items()}
 
-replace = {'in.nextInt()': 'cin >> ', 'System.out.println': 'cout << ', 'System.out.print': 'cout << ', 'int': 'int', 'double': 'double', '=': '=', '||': '||', '&&': '&&', '!=': '!=', '==': '==', '/': '/', '%': '%', '!': '!', '++': '+= 1'}
+replace = {'in.nextInt()': 'cin >> ', 'System.out.println': 'cout << ', 'System.out.print': 'cout << ', 'int': 'int', 'double': 'double','boolean':'bool', '=': '=', '||': '||', '&&': '&&', '!=': '!=', '==': '==', '/': '/', '%': '%', '!': '!', '++': '+= 1'}
 
 # файл, содержащий обратную польскую запись
 f = open('reverse_polish_entry.txt', 'r')
@@ -164,7 +164,7 @@ def indent_cpp_code(code):
 out_seq = indent_cpp_code(out_seq)
 out_seq = out_seq.replace("+= 1","++")
 
-#out_seq = out_seq + "}\n";
+out_seq = out_seq.replace("isPrime {","(isPrime) {");
 
 stack.clear()
 
