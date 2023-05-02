@@ -1384,12 +1384,12 @@ def prog3():
     inp_seq = f.read()
     inp_seq = inp_seq.replace("\"Yes\"","Yes")
     inp_seq = inp_seq.replace("\"No\"","No")
-    inp_seq = inp_seq.replace("public division a int b int a return b % ","")
+    inp_seq = inp_seq.replace("public static division a int b int a return b % ","")
     inp_seq = inp_seq.replace("division num i == 0 2Ф 1Ф (","division(num,i) 0 ==")
     inp_seq = inp_seq.replace("public static void 2 АЭМ String args ","String[] args НП ")
     inp_seq = re.sub(r"(System\.out\.println\s+)(\w+)", r"\g<1>\g<2> 1 Ф", inp_seq)
     inp_seq = inp_seq.replace("main ","")
-    inp_seq = inp_seq.replace("static "," КП ")
+    inp_seq = inp_seq.replace("1Ф int ","1Ф КП ")
     inp_seq = inp_seq.replace("int in . nextInt 0Ф","in.nextInt()")
     inp_seq = inp_seq.replace("++","1 +=")
     inp_seq = inp_seq.replace("import java . util . Scanner ","")
@@ -1716,10 +1716,10 @@ btngo.place(x=470,y=90,width=110,height=50)
 
 # Java -> C++
 codetxt3 = st.ScrolledText(LR3)
-codetxt3.place(x=40, y=0, width=410, height=370)
+codetxt3.place(x=40, y=0, width=410, height=390)
 
 cpptext = st.ScrolledText(LR3)
-cpptext.place(x=600, y=0, width=410, height=370)
+cpptext.place(x=600, y=0, width=410, height=390)
 
 btngo = tk.Button(LR3, text="Выполнить \n преобразование", command=clicked3, font=("Arial", 10))
 btngo.place(x=470, y=90, width=110, height=50)
