@@ -2,6 +2,7 @@ import json
 import re
 from tkinter import *
 import tkinter.scrolledtext as st
+import os
 
 CLASSES_OF_TOKENS = ['W', 'I', 'O', 'R', 'N', 'C']
 
@@ -728,6 +729,14 @@ def clicked():
     text = f1.read()
     cpptext.insert("1.0",text)
     f1.close()
+
+    filename = 'lab3.py'
+    filename2 = 'Пример.txt'
+    dir_path = os.getcwd()
+
+    for file in os.listdir(dir_path):
+        if file != filename and file != filename2:
+            os.remove(os.path.join(dir_path, file))
 
 window=Tk()
 window.title("LR3")
