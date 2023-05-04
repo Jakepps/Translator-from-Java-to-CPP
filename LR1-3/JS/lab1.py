@@ -1,18 +1,10 @@
 import json
-import re
 
-SERVICE_WORDS = ['abstract', 'case', 'continue', 'extends', 'goto', 'int', 'package', 'short',
-                 'try', 'assert', 'catch', 'default', 'final', 'if', 'private',
-                 'static', 'this', 'void', 'boolean', 'char', 'do','long', 'protected',
-                 'throw', 'volatile', 'break', 'class', 'double', 'float', 'import', 'native',
-                 'public', 'super','throws','while','byte','const','else','for','instanceof',
-                 'new','return','switch','transient','print','println','main','System',
-                 'out','String','args','in.nextInt()']
-
-OPERATIONS = ['*','+','-','%', '/','++','*=','+=','-=','%=','/=','==', '<', '<=', '!=', '=', '>', '>=','&','|']
-
-SEPARATORS = ['\t', '\n', ' ', '(', ')', ',', '.', ':', ';', '[', ']','{','}']
-
+SERVICE_WORDS = ['Array', 'alert', 'else', 'false', 'for', 'function', 'goto', \
+                 'if', 'new', 'parseInt', 'prompt', 'return', 'true', 'var', 'while']
+OPERATIONS = ['!', '!=', '%', '&&', '*', '**', '+', '-', '/', '<', '<=', '=', \
+              '==', '>', '>=', '||']
+SEPARATORS = ['\n', ' ', '(', ')', ',', '.', ':', ';', '[', ']', '{', '}']
 
 def check(tokens, token_class, token_value):
     if not(token_value in tokens[token_class]):
@@ -44,9 +36,8 @@ for separator in SEPARATORS:
     check(tokens, 'R', separator)
 
 # файл, содержащий текст на входном языке программирования
-f = open('java.txt', 'r')
+f = open('java_script.txt', 'r')
 input_sequence = f.read()
-# input_sequence = re.sub(r'\1++',r'([a-zA-Z])\s*=\s*\1\s*\+\s*1',input_sequence)
 f.close()
 
 i = 0

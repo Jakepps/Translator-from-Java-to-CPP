@@ -54,8 +54,8 @@ def operators():
     global i
     scan()
     while name() or \
-          nxtsymb in ['int', 'double', 'string', 'boolean', 'float', '{', 'public static void main(String[] args)',\
-                      'if', 'for', 'while', 'break', 'continue', 'return']:
+          nxtsymb in ['var', '{', 'function', 'if', 'for', 'while', 'goto', \
+                      'break', 'continue', 'return']:
         operator()
         if nxtsymb == ';':
             scan()
@@ -64,7 +64,7 @@ def operators():
 
 # оператор
 def operator():
-    if nxtsymb in ['int','double','float','boolean','string']:
+    if nxtsymb == 'var':
         description()
         if nxtsymb != ';': error()
     elif name():
@@ -87,10 +87,14 @@ def operator():
             if nxtsymb != ';': error()
         else: error()
     elif nxtsymb == '{': compound_operator()
-    elif nxtsymb == 'public static': function()
+    elif nxtsymb == 'function': function()
     elif nxtsymb == 'if': conditional_operator()
     elif nxtsymb == 'for': for_loop()
     elif nxtsymb == 'while': while_loop()
+    elif nxtsymb == 'goto':
+        goto_statement()
+        scan()
+        if nxtsymb != ';': error()
     elif nxtsymb == 'break':
         break_operator()
         scan()
@@ -107,7 +111,7 @@ def operator():
 # имя (идентификатор)
 def name():
     return nxtsymb in tokens['I'].values() or \
-           nxtsymb in ['System.out.println', 'System.out.print']
+           nxtsymb in ['alert', 'parseInt', 'prompt']
 
 # описание
 def description():
@@ -145,7 +149,7 @@ def list_of_names():
 
 # функция
 def function():
-    if nxtsymb != 'public static void main(String[] args)\n{': error()
+    if nxtsymb != 'function': error()
     scan()
     if not(name()): error()
     scan()
@@ -217,7 +221,7 @@ def variable():
 
 # арифметическая операция
 def arithmetic_operation():
-    return nxtsymb in ['%', '*', '+', '-', '/', '+=','-=', '*=', '/=', '%=']
+    return nxtsymb in ['%', '*', '**', '+', '-', '/']
 
 # составной оператор
 def compound_operator():
@@ -231,7 +235,6 @@ def assignment_operator():
     scan()
     variable()
     if nxtsymb != '=': error()
-    #elif nxtsymb != '++': error()
     scan()
     expression()
 
@@ -304,6 +307,13 @@ def while_loop():
     if nxtsymb != ')': error()
     scan()
     operator()
+
+# оператор goto
+def goto_statement():
+    if nxtsymb != 'goto': error()
+    scan()
+    if not(name()): error()
+    scan()
 
 # оператор break
 def break_operator():

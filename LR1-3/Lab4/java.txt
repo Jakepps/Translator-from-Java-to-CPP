@@ -1,5 +1,5 @@
-int b = 0;
-while (b < 1000;ds)
+double b = 0;
+for (b = 2; b < 3333; b++)
 {
-    b *= 333;
+    b = b * 333;
 }
