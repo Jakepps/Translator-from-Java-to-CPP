@@ -121,16 +121,14 @@ def description():
             scan()
     elif nxtsymb == '=':
         scan()
-        if nxtsymb == '=':
+        if nxtsymb == 'new':
             scan()
-            if nxtsymb != 'new': error()
-            scan()
-            if nxtsymb != 'int': error()
-            scan()
-            if nxtsymb != '[': error()
+            if not(name()): error()
+            if not(nxtsymb == '['): error()
             scan()
             if not(integer()): error()
-            if nxtsymb != ']': error()
+            scan()
+            if not(nxtsymb == ']'): error()
             scan()
         else:
             expression()
