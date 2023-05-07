@@ -46,7 +46,9 @@ for separator in SEPARATORS:
 # файл, содержащий текст на входном языке программирования
 f = open('java.txt', 'r')
 input_sequence = f.read()
-# input_sequence = re.sub(r'\1++',r'([a-zA-Z])\s*=\s*\1\s*\+\s*1',input_sequence)
+input_sequence = re.sub(r"(\w)\+\+", r"\1 = \1 + 1", input_sequence)
+input_sequence = input_sequence.replace("public static void main(String[] args)\n{\n","\n\n")
+input_sequence = input_sequence.replace("\n}\n","")
 f.close()
 
 i = 0

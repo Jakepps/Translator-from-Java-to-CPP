@@ -121,15 +121,16 @@ def description():
             scan()
     elif nxtsymb == '=':
         scan()
-        if nxtsymb == 'new':
+        if nxtsymb == '=':
             scan()
-            if nxtsymb != 'Array': error()
+            if nxtsymb != 'new': error()
             scan()
-            if nxtsymb != '(': error()
+            if nxtsymb != 'int': error()
+            scan()
+            if nxtsymb != '[': error()
             scan()
             if not(integer()): error()
-            scan()
-            if nxtsymb != ')': error()
+            if nxtsymb != ']': error()
             scan()
         else:
             expression()
@@ -231,7 +232,6 @@ def assignment_operator():
     scan()
     variable()
     if nxtsymb != '=': error()
-    #elif nxtsymb != '++': error()
     scan()
     expression()
 

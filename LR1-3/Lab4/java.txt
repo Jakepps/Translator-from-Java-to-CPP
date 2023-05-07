@@ -1,5 +1,18 @@
-double b = 0;
-for (b = 2; b < 3333; b++)
+public static void main(String[] args)
 {
-    b = b * 333;
+    double b = 0;
+    for (b = 2; b < 3333; b++)
+    {
+        b = b * 333;
+    }
+
+    while (b > 3000)
+    {
+        b = b - 222;
+    }
+
+    if (b > 100)
+        b = b * 2;
+
+    int[] myArray = new int[5];
 }
