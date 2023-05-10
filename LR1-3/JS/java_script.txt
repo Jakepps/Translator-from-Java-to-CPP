@@ -1,7 +1,0 @@
-var b = 1;
-while (b < 3333) {
-    b = b * 333;
-}
-if (b == 2){
-    alert('YES');
-}

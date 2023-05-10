@@ -196,9 +196,9 @@ def number():
 def integer():
     return nxtsymb in tokens['N'].values()
 
-# вещественное число (числовая константа)
-def real_number():
-    return nxtsymb in tokens['N'].values()
+# # вещественное число (числовая константа)
+# def real_number():
+#     return nxtsymb in tokens['N'].values()
 
 # строка (символьная константа)
 def line():
