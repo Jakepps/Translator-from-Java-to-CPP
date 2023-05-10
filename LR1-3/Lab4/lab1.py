@@ -49,6 +49,8 @@ input_sequence = f.read()
 input_sequence = re.sub(r"(\w)\+\+", r"\1 = \1 + 1", input_sequence)
 input_sequence = input_sequence.replace("public static void main(String[] args)\n{\n","\n\n")
 input_sequence = input_sequence.replace("\n}\n","")
+input_sequence = input_sequence.replace("public static division (int a, int b) {","\n\n")
+input_sequence = input_sequence.replace("System.out.println(","alert(")
 f.close()
 
 i = 0

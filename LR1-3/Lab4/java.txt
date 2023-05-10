@@ -1,18 +1,21 @@
+public static division (int a, int b) {
+    return a % b;
+}
+
 public static void main(String[] args)
 {
-    double b = 0;
-    for (b = 2; b < 3333; b++)
-    {
-        b = b * 333;
+    int num = 14;
+    boolean isPrime = true;
+    int i = 2;
+
+    while (i <= num) {
+        if (division(num,i) == 0) {
+            isPrime = false;
+            break;
+        }
+        i++;
     }
 
-    while (b > 3000)
-    {
-        b = b - 222;
-    }
-
-    if (b > 100)
-        b = b * 2;
-
-    int[] myArray = new int[5];
+    if (isPrime = true)
+        System.out.println('Yes');
 }

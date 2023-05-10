@@ -107,7 +107,7 @@ def operator():
 # имя (идентификатор)
 def name():
     return nxtsymb in tokens['I'].values() or \
-           nxtsymb in ['System.out.println', 'System.out.print']
+           nxtsymb in ['System.out.println', 'alert']
 
 # описание
 def description():
