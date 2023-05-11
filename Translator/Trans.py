@@ -1572,7 +1572,7 @@ codetxt4.tag_configure("highlight", background="red")
 btngo = tk.Button(LR4, text="Проверить \n правильность кода", command=clicked4, font=("Arial", 10))
 btngo.place(x=150, y=86, width=130, height=50)
 
-errorlb = Label(LR4,text="Ошибок нет",font=("Arial", 12))
+errorlb = Label(LR4,text=" ",font=("Arial", 12))
 errorlb.place(x=400,y=400)
 
 window.mainloop()
