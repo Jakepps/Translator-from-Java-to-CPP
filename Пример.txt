@@ -16,8 +16,15 @@ public static void main(String[] args)
         i++;
     }
 
-    if (isPrime)
-        System.out.println("Yes");
-    else
-        System.out.println("No");
+    for (i = 1; i < 100; i++){
+        b = i + 2;
+        num = b * i;
+    }
+
+    if (isPrime = true){
+        System.out.println('Yes');
+    }
+    else{
+        System.out.println('No');
+    }
 }
